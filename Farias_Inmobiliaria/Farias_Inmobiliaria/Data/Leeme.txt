@@ -1,0 +1,49 @@
+1. Se arma solucion y repositorio del proyecto en Github. 
+	Tipo aplicacion web aspnet core mvc
+
+2. Se instalan dependencias
+	# Para el manejo los servicios de sql:
+	En el administrador de nugets, se instala System.data.SqlClient 4.8.2
+	# Para generar codigo:
+	En el administrador de nugets, se instala Microsoft.VisualStudio.Web.CodeGeneration.Design 5.0.2
+
+3.  Se crea en la raiz del proyecto la carpeta Data para alojar la base de datos.
+	Con la rutra de acceso completa de esa carpeta, se crea una base de datos con el explorador de objetos de Sql server y las tablas
+
+4. Crear en la carpeta Models, las clases correspondientes.
+	Recordar que las propiedades de la clase empiezan con mayusculas.
+	Crear todas las propiedades o atributos de la clase.
+
+5. Crear los controladores en la carpeta controllers con el nombre concatenado a Controller.
+	Click izquierdo, agregar control, elegir controlador mvc con acciones de lectura y escritura
+
+6. Crear en la carpeta models las clases vacia Repositorio para cada controlador.
+	En cada repositorio crear el constructor
+
+7. Ver el tema del string de conexion.
+	En appSetting verificar el string de conexion, si es de sqlserver
+		"Server=(localdb)\\MSSQLLocalDB;Database=BDInmobiliaria;Trusted_Connection=True;MultipleActiveResultSets=true"
+		
+	En el app setting se pega todo esto y se cambia el nombre de la carpéta data
+
+	"ConnectionStrings": {
+    "File": "Server=(localdb)\\MSSQLLocalDB;Integrated Security=true;AttachDbFileName=C:\\Git\\inmobiliariaULP\\Inmobiliaria .Net Core\\Data\\BDInmobiliaria.mdf",
+    "DefaultConnection": "Server=(localdb)\\MSSQLLocalDB;Database=Farias_inmonbiliaria_BD;Trusted_Connection=True;MultipleActiveResultSets=true"
+  }
+
+8. Dentro de cada clase, agrego los metodos. En su defecto tambien se agrega el string de conexion, salvo que se implemente un interface de repositorio Base
+	Alta, Baja, y todo el ABM
+
+9. Luego en el controlador de cada clase, instancio el repositorio, cada vez que se inicia el controlador, se inicia el repositorio
+	 // declaro la variable en el repositorio
+
+        RepositorioInquilino repositorio;
+
+        // Y hago un constructor para instanciarlo cuando se abre
+
+        public InquilinoController()
+        {
+            repositorio = new RepositorioInquilino();
+        }
+	
+
