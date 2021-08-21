@@ -1,3 +1,10 @@
+Tips:	
+	ctrl K c comenta seleccion
+	ctrl K u descomenta	selccion
+	ctrl K k agrga/retira marcador
+	shift alt clik selcciona multiples lineas para editar
+
+
 1. Se arma solucion y repositorio del proyecto en Github. 
 	Tipo aplicacion web aspnet core mvc
 
@@ -45,5 +52,10 @@
         {
             repositorio = new RepositorioInquilino();
         }
+
+	
+
+		
+
 	
 

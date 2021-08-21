@@ -116,7 +116,7 @@ namespace Farias_Inmobiliaria.Models
                             Id = reader.GetInt32(0),
                             Nombre = reader.GetString(1),
                             Apellido = reader.GetString(2),
-                            Dni = reader.GetString(3),
+                            Dni = reader.GetInt32(3),
                             Telefono = reader.GetString(4),
                             Email = reader.GetString(5),
 
@@ -146,7 +146,7 @@ namespace Farias_Inmobiliaria.Models
                             Id = reader.GetInt32(0),
                             Nombre = (string)reader[nameof(Inquilino.Nombre)],
                             Apellido = (string)reader[nameof(Inquilino.Apellido)],
-                            Dni = (string)reader[nameof(Inquilino.Dni)],
+                            Dni = (int)reader[nameof(Inquilino.Dni)],
                             Telefono = (string)reader[nameof(Inquilino.Telefono)],
                             Email = (string)reader[nameof(Inquilino.Email)],
 

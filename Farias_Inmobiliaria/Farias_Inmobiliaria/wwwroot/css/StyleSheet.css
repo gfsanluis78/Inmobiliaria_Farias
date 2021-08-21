@@ -1,0 +1,45 @@
+﻿body {
+}
+div {
+    display: block;
+}
+
+#Bienvenida {
+    color:blueviolet;
+}
+
+#demo{
+    margin-left:auto;
+    margin-right:auto;
+
+}
+
+.carousel {
+    width:250px;
+    height: 66.67%;
+    margin-bottom: 0; /* ¿por qué, carousel, por qué? */
+}
+
+.carousel-item {
+    position: relative;
+    display: none;
+    text-align: center;
+    width: 100%;
+    margin-right: -100%;
+   
+}
+
+.carousel-indicators li {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

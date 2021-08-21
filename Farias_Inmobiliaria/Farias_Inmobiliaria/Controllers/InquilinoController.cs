@@ -53,6 +53,7 @@ namespace Farias_Inmobiliaria.Controllers
             }
             catch
             {
+                TempData["Mensaje"] = "Ocurrio un error al querer crear";
                 return View();
             }
         }
@@ -73,25 +74,27 @@ namespace Farias_Inmobiliaria.Controllers
         // POST: InquilinoController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Inquilino inquilino)
         {
             Inquilino i = null;
             try
             {
                 i = repositorio.ObtenerPorId(id);
 
-                i.Nombre = collection["Nombre"];
-                i.Apellido = collection["Apellido"];
-                i.Dni = collection["Dni"];
-                i.Telefono = collection["Telefono"];
-                i.Email = collection["Email"];
+                i.Nombre = inquilino.Nombre;
+                i.Apellido = inquilino.Apellido;
+                i.Dni  = inquilino.Dni;
+                i.Telefono = inquilino.Telefono;
+                i.Email = inquilino.Email;
 
                 repositorio.Modificacion(i);
                 TempData["Mensaje"] = "Datos guardados correctamente";
+
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
-            {//poner breakpoints para detectar errores
+            {
+                TempData["Mensaje"] = "Ocurrio un error al querer editar";
                 throw;
             };
             
