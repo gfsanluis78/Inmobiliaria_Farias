@@ -47,9 +47,9 @@ namespace Farias_Inmobiliaria.Controllers
                 repositorio.Alta(p);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                TempData["Mensaje"] = "Ocurrio un error al querer Crear";
+                TempData["Mensaje"] = "Ocurrio un error al querer Crear: "+ex;
                 return View();
             }
         }

@@ -37,7 +37,7 @@ namespace Farias_Inmobiliaria.Models
                     conn.Open();
                     res = Convert.ToInt32(comm.ExecuteScalar());
                     conn.Close();
-                    i.Id = res;
+                    i.IdInquilino = res;
                 }
 
             }
@@ -49,12 +49,12 @@ namespace Farias_Inmobiliaria.Models
             int res = -1;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string sql = $"DELETE FROM Inquilinos WHERE Id = @id";
+                string sql = $"DELETE FROM Inquilinos WHERE IdInquilino = @id";
 
                 using (SqlCommand comm = new SqlCommand(sql, conn))
                 {
                     comm.CommandType = CommandType.Text;
-                    comm.Parameters.AddWithValue("@Id", id);
+                    comm.Parameters.AddWithValue("@IdInquilino", id);
 
                     conn.Open();
 
@@ -74,12 +74,12 @@ namespace Farias_Inmobiliaria.Models
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sql = $"UPDATE Inquilinos SET Nombre=@nombre, Apellido=@apellido, Dni=@dni, Telefono=@telefono, Email=@email " +
-                    $"WHERE Id = @id";
+                    $"WHERE IdInquilino = @id";
                 using (SqlCommand comm = new SqlCommand(sql, connection))
                 {
                     comm.CommandType = CommandType.Text;
 
-                    comm.Parameters.AddWithValue("@id", i.Id);
+                    comm.Parameters.AddWithValue("@id", i.IdInquilino);
                     comm.Parameters.AddWithValue("@nombre", i.Nombre);
                     comm.Parameters.AddWithValue("@apellido", i.Apellido);
                     comm.Parameters.AddWithValue("@dni", i.Dni);
@@ -101,8 +101,8 @@ namespace Farias_Inmobiliaria.Models
             Inquilino i = null;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"SELECT Id, Nombre, Apellido, Dni, Telefono, Email FROM Inquilinos" +
-                    $" WHERE Id=@id";
+                string sql = $"SELECT IdInquilino, Nombre, Apellido, Dni, Telefono, Email FROM Inquilinos" +
+                    $" WHERE IdInquilino=@id";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.Add("@id", SqlDbType.Int).Value = id;
@@ -113,10 +113,10 @@ namespace Farias_Inmobiliaria.Models
                     {
                         i = new Inquilino
                         {
-                            Id = reader.GetInt32(0),
+                            IdInquilino = reader.GetInt32(0),
                             Nombre = reader.GetString(1),
                             Apellido = reader.GetString(2),
-                            Dni = reader.GetInt32(3),
+                            Dni = reader.GetString(3),
                             Telefono = reader.GetString(4),
                             Email = reader.GetString(5),
 
@@ -133,7 +133,7 @@ namespace Farias_Inmobiliaria.Models
             IList<Inquilino> res = new List<Inquilino>();
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string sql = @"SELECT Id, Nombre, Apellido, Dni, Telefono, Email
+                string sql = @"SELECT IdInquilino, Nombre, Apellido, Dni, Telefono, Email
                 FROM Inquilinos;";
                 using (SqlCommand comm = new SqlCommand(sql, conn))
                 {
@@ -143,10 +143,10 @@ namespace Farias_Inmobiliaria.Models
                     {
                         Inquilino i = new()
                         {
-                            Id = reader.GetInt32(0),
+                            IdInquilino = reader.GetInt32(0),
                             Nombre = (string)reader[nameof(Inquilino.Nombre)],
                             Apellido = (string)reader[nameof(Inquilino.Apellido)],
-                            Dni = (int)reader[nameof(Inquilino.Dni)],
+                            Dni = (string)reader[nameof(Inquilino.Dni)],
                             Telefono = (string)reader[nameof(Inquilino.Telefono)],
                             Email = (string)reader[nameof(Inquilino.Email)],
 

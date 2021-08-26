@@ -38,7 +38,7 @@ namespace Farias_Inmobiliaria.Models
                     conn.Open();
                     res = Convert.ToInt32(comm.ExecuteScalar());
                     conn.Close();
-                    p.Id = res;
+                    p.IdPropietario = res;
                 }
 
             }
@@ -50,12 +50,12 @@ namespace Farias_Inmobiliaria.Models
             int res = -1;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string sql = $"DELETE FROM Propietarios WHERE Id = @id";
+                string sql = $"DELETE FROM Propietarios WHERE IdPropietario = @id";
 
                 using (SqlCommand comm = new SqlCommand(sql, conn))
                 {
                     comm.CommandType = CommandType.Text;
-                    comm.Parameters.AddWithValue("@Id", id);
+                    comm.Parameters.AddWithValue("@IdPropietario", id);
 
                     conn.Open();
 
@@ -75,12 +75,12 @@ namespace Farias_Inmobiliaria.Models
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string sql = $"UPDATE Propietarios SET Nombre=@nombre, Apellido=@apellido, Dni=@dni, Telefono=@telefono, Email=@email, Password=@password " +
-                    $"WHERE Id = @id";
+                    $"WHERE IdPropietario = @id";
                 using (SqlCommand comm = new SqlCommand(sql, connection))
                 {
                     comm.CommandType = CommandType.Text;
 
-                    comm.Parameters.AddWithValue("@id", p.Id);
+                    comm.Parameters.AddWithValue("@id", p.IdPropietario);
                     comm.Parameters.AddWithValue("@nombre", p.Nombre);
                     comm.Parameters.AddWithValue("@apellido", p.Apellido);
                     comm.Parameters.AddWithValue("@dni", p.Dni);
@@ -103,8 +103,8 @@ namespace Farias_Inmobiliaria.Models
             Propietario p = null;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"SELECT Id, Nombre, Apellido, Dni, Telefono, Email, Password FROM Propietarios" +
-                    $" WHERE Id=@id";
+                string sql = $"SELECT IdPropietario, Nombre, Apellido, Dni, Telefono, Email, Password FROM Propietarios" +
+                    $" WHERE IdPropietario=@id";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.Add("@id", SqlDbType.Int).Value = id;
@@ -115,7 +115,7 @@ namespace Farias_Inmobiliaria.Models
                     {
                         p = new Propietario
                         {
-                            Id = reader.GetInt32(0),
+                            IdPropietario = reader.GetInt32(0),
                             Nombre = reader.GetString(1),
                             Apellido = reader.GetString(2),
                             Dni = reader.GetString(3),
@@ -136,7 +136,7 @@ namespace Farias_Inmobiliaria.Models
             IList<Propietario> res = new List<Propietario>();
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string sql = @"SELECT Id, Nombre, Apellido, Dni, Telefono, Email, Password
+                string sql = @"SELECT IdPropietario, Nombre, Apellido, Dni, Telefono, Email, Password
                 FROM Propietarios;";
                 using (SqlCommand comm = new SqlCommand(sql, conn))
                 {
@@ -146,7 +146,7 @@ namespace Farias_Inmobiliaria.Models
                     {
                         Propietario p = new()
                         {
-                            Id = reader.GetInt32(0),
+                            IdPropietario = reader.GetInt32(0),
                             Nombre = (string)reader[nameof(Propietario.Nombre)],
                             Apellido = (string)reader[nameof(Propietario.Apellido)],
                             Dni = (string)reader[nameof(Propietario.Dni)],

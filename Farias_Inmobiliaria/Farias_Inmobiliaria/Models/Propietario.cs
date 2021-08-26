@@ -11,7 +11,7 @@ namespace Farias_Inmobiliaria.Models
 
         [Key]
         [Display(Name = "Código")]
-        public int Id { get; set; }
+        public int IdPropietario { get; set; }
 
         [Required(ErrorMessage = "Este campo es requerido.")]
         [StringLength(30, ErrorMessage = "Longitud entre 4 y 30 caracteres.",
