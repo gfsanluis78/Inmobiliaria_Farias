@@ -11,11 +11,10 @@ namespace Farias_Inmobiliaria.Models
 {
     public class RepositorioInmueble : RepositorioBase
     {
-        
-        public RepositorioInmueble(IConfiguration configuration) : base (configuration)
+
+        public RepositorioInmueble(IConfiguration configuration) : base(configuration)
         {
         }
-
         // agrego los metodos
 
         public int Alta(Inmueble i)
@@ -23,11 +22,29 @@ namespace Farias_Inmobiliaria.Models
             int res = -1;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string sql = @"INSERT into Inmuebles (Direccion, Superficie, Latitud, Longitud, Uso, " +
-                    @"Tipo, Ambientes, PrecioAproximado, IdPropietario)
-                VALUES ( @direccion, @superficie, @latitud, @longitud, @uso, @tipo, @ambientes, " +
-                @"@precioAproximado, @idPropietario);
-                SELECT Scope_IDENTITY();";
+                string sql = @"
+                                INSERT into Inmuebles(
+                                    Direccion, 
+                                    Superficie, 
+                                    Latitud, 
+                                    Longitud, 
+                                    Uso,
+                                    Tipo, 
+                                    Ambientes, 
+                                    PrecioAproximado, 
+                                    IdPropietario)
+                                VALUES  
+                                    (@direccion, 
+                                    @superficie, 
+                                    @latitud, 
+                                    @longitud,  
+                                    @uso, 
+                                    @tipo, 
+                                    @ambientes, 
+                                    @precioAproximado, 
+                                    @idPropietario);
+                                SELECT Scope_IDENTITY();";
+
                 using (SqlCommand comm = new SqlCommand(sql, conn))
                 {
                     comm.Parameters.AddWithValue("@direccion", i.Direccion);
@@ -39,14 +56,12 @@ namespace Farias_Inmobiliaria.Models
                     comm.Parameters.AddWithValue("@ambientes", i.Ambientes);
                     comm.Parameters.AddWithValue("@precioAproximado", i.PrecioAproximado);
                     comm.Parameters.AddWithValue("@idPropietario", i.IdPropietario);
-                    
 
                     conn.Open();
                     res = Convert.ToInt32(comm.ExecuteScalar());
                     conn.Close();
                     i.IdInmueble = res;
                 }
-
             }
             return res;
         }
@@ -61,16 +76,14 @@ namespace Farias_Inmobiliaria.Models
                 using (SqlCommand comm = new SqlCommand(sql, conn))
                 {
                     comm.CommandType = CommandType.Text;
-                    comm.Parameters.AddWithValue("@IdInmueble", id);
+                    comm.Parameters.AddWithValue("@id", id);
 
                     conn.Open();
 
                     res = comm.ExecuteNonQuery();
 
                     conn.Close();
-
                 }
-
             }
             return res;
         }
@@ -106,7 +119,7 @@ namespace Farias_Inmobiliaria.Models
                     comm.Parameters.AddWithValue("@ambientes", i.Ambientes);
                     comm.Parameters.AddWithValue("@precioAproximado", i.PrecioAproximado);
                     comm.Parameters.AddWithValue("@idPropietario", i.IdPropietario);
-                    
+
                     comm.Parameters.AddWithValue("@id", i.IdInmueble);
 
 
@@ -179,17 +192,30 @@ namespace Farias_Inmobiliaria.Models
             IList<Inmueble> res = new List<Inmueble>();
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string sql = @"SELECT IdInmueble, Direccion, Superficie, Latitud, Longitud, 
-                                Uso, Ambientes, Tipo, PrecioAproximado, i.IdPropietario, 
-                                p.Nombre, p.Apellido 
-                                FROM Inmuebles i INNER JOIN Propietarios p ON i.IdPropietario = p.IdPropietario";
+                string sql = @"
+                                SELECT 
+                                    IdInmueble, 
+                                    Direccion, 
+                                    Superficie, 
+                                    Latitud, 
+                                    Longitud, 
+                                    Uso, 
+                                    Ambientes, 
+                                    Tipo, 
+                                    PrecioAproximado, 
+                                    i.IdPropietario, 
+                                    p.Nombre, 
+                                    p.Apellido 
+                                FROM Inmuebles i INNER JOIN Propietarios p 
+                                ON i.IdPropietario = p.IdPropietario";
+                
                 using (SqlCommand comm = new SqlCommand(sql, conn))
                 {
                     comm.CommandType = CommandType.Text;
                     conn.Open();
                     var reader = comm.ExecuteReader();
                     while (reader.Read())
-                        // Ver tema de agregar el inquilino de cada inmubele si lo hay, con inner join a izquierda o derecha
+                    // Ver tema de agregar el inquilino de cada inmubele si lo hay, con inner join a izquierda o derecha
                     {
                         Inmueble i = new()
                         {
@@ -209,20 +235,13 @@ namespace Farias_Inmobiliaria.Models
                                 Apellido = reader.GetString(11)
 
                             },
-                            
-
                         };
                         res.Add(i);
-
                     }
                     conn.Close();
-
                 }
-
             }
             return res;
         }
-
-
     }
 }

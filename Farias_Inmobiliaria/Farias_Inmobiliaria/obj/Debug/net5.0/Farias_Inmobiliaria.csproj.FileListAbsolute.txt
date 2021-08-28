@@ -423,3 +423,4 @@ C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobi
 C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobiliaria\Farias_Inmobiliaria\obj\Debug\net5.0\Razor\Views\Inmueble\Edit.cshtml.g.cs
 C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobiliaria\Farias_Inmobiliaria\bin\Debug\net5.0\Google.Api.CommonProtos.dll
 C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobiliaria\Farias_Inmobiliaria\bin\Debug\net5.0\Google.Protobuf.dll
+C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobiliaria\Farias_Inmobiliaria\obj\Debug\net5.0\Razor\Views\Inmueble\Delete.cshtml.g.cs

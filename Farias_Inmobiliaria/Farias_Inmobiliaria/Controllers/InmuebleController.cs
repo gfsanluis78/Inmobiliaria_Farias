@@ -1,5 +1,4 @@
 ﻿using Farias_Inmobiliaria.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -11,12 +10,12 @@ namespace Farias_Inmobiliaria.Controllers
     {
         private readonly RepositorioInmueble repositorio;
         private readonly RepositorioPropietario repositorioPropietario;
-        
+
         public InmuebleController(IConfiguration configuration)
         {
             this.repositorio = new RepositorioInmueble(configuration);
             this.repositorioPropietario = new RepositorioPropietario(configuration);
-            
+
         }
 
         // GET: InmuebleController
@@ -71,7 +70,7 @@ namespace Farias_Inmobiliaria.Controllers
             try
             {
 
-                if(ModelState.IsValid)
+                if (ModelState.IsValid)
                 {
                     repositorio.Alta(i);
                     TempData["Id"] = i.IdInmueble;
@@ -84,14 +83,15 @@ namespace Farias_Inmobiliaria.Controllers
 
                 }
 
-                
+
             }
-            catch (Exception ex){ViewBag.Error = ex.Message;  return View(i); }
+            catch (Exception ex) { ViewBag.Error = ex.Message; return View(i); }
         }
 
         // GET: InmuebleController/Edit/5
         public ActionResult Edit(int id)
-        {try
+        {
+            try
             {
                 var inmueble = repositorio.ObtenerPorId(id);
 
@@ -109,7 +109,7 @@ namespace Farias_Inmobiliaria.Controllers
         // POST: InmuebleController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-       public ActionResult Edit(int id, Inmueble i)
+        public ActionResult Edit(int id, Inmueble i)
         {
             try
             {
@@ -117,30 +117,58 @@ namespace Farias_Inmobiliaria.Controllers
                 repositorio.Modificacion(i);
                 TempData["Mensaje"] = "Datos Guardados correctamente";
                 return RedirectToAction(nameof(Index));
-             
+
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 ViewBag.Propietarios = repositorioPropietario.ObtenerTodos();
-                ViewBag.Error = ex.Message; return View(i); }
+                ViewBag.Error = ex.Message; return View(i);
+            }
         }
+
 
         // GET: InmuebleController/Delete/5
         public ActionResult Delete(int id)
-        {
-            return View();
-        }
 
-        // POST: InmuebleController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
         {
             try
             {
+                var i = repositorio.ObtenerPorId(id);
+                if (TempData.ContainsKey("Mensaje"))
+                    ViewBag.Mensaje = TempData["Mensaje"];
+                if (TempData.ContainsKey("Error"))
+                    ViewBag.Error = TempData["Error"];
+                return View(i);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message; return View();
+            }
+        }
+
+        // POST: Inmueble/Eliminar/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, Inmueble i)
+        {
+            try
+            {
+                repositorio.Baja(id);
+                TempData["Mensaje"] = "Eliminación realizada correctamente";
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception ex) { ViewBag.Error = ex.Message; return View(); }  }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrate = ex.StackTrace;
+                return View();
+            }
         }
+
+
+
     }
+
+
+}
 
