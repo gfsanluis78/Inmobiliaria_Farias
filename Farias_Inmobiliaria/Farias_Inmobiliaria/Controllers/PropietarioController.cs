@@ -3,9 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Farias_Inmobiliaria.Controllers
 {
@@ -21,20 +18,34 @@ namespace Farias_Inmobiliaria.Controllers
         // GET: PropietarioController
         public ActionResult Index()
         {
-            var lista = repositorio.ObtenerTodos();
-            return View(lista);
+            try
+            {
+                var lista = repositorio.ObtenerTodos();
+                if (TempData.ContainsKey("Id"))
+                    ViewBag.Id = TempData["Id"];
+                if (TempData.ContainsKey("Mensaje"))
+                    ViewBag.Mensaje = TempData["Mensaje"];
+                //throw new Exception(); //Prueba de cacth
+                return View(lista);
+            }
+            catch (Exception ex) { ViewBag.Error = ex.Message; return View(); }
         }
 
         // GET: PropietarioController/Details/5
         public ActionResult Details(int id)
         {
-            Propietario propietario = repositorio.ObtenerPorId(id);
-            return View(propietario);
+            try
+            {
+                Propietario P = repositorio.ObtenerPorId(id);
+                return View(P);
+            }
+            catch (Exception ex) { ViewBag.Error = ex.Message; return View(); }
         }
 
         // GET: PropietarioController/Create
         public ActionResult Create()
         {
+
             return View();
         }
 
@@ -45,14 +56,19 @@ namespace Farias_Inmobiliaria.Controllers
         {
             try
             {
-                repositorio.Alta(p);
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    repositorio.Alta(p);
+                    TempData["Id"] = p.IdPropietario;
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData["Mensaje"] = "Ocurrio un error con el modelo al Crear";
+                    return View(p);
+                }
             }
-            catch (Exception ex)
-            {
-                TempData["Mensaje"] = "Ocurrio un error al querer Crear: "+ex;
-                return View();
-            }
+            catch (Exception ex) { ViewBag.Error = ex.Message; return View(p); }
         }
 
         // GET: PropietarioController/Edit/5
@@ -60,14 +76,17 @@ namespace Farias_Inmobiliaria.Controllers
         {
             try
             {
-                var propietario = repositorio.ObtenerPorId(id);
-                return View(propietario);
-            }
-            catch (Exception ex)
-            {
+                var p = repositorio.ObtenerPorId(id);
 
-                throw;
+                if (TempData.ContainsKey("Mensaje"))
+                    ViewBag.Mensaje = TempData["Mensaje"];
+                if (TempData.ContainsKey("Error"))
+                    ViewBag.Error = TempData["Error"];
+
+                return View(p);
             }
+            catch (Exception ex) { ViewBag.Error = ex.Message; return View(); }
+
         }
 
         // POST: PropietarioController/Edit/5
@@ -88,15 +107,11 @@ namespace Farias_Inmobiliaria.Controllers
                 //p.Password = collection["Password"];
 
                 repositorio.Modificacion(p);
-                TempData["Mensaje"] = "Datos guardados correctamente";
+                TempData["Mensaje"] = "Datos guardados correctamente del Propietario " + id;
                 return RedirectToAction(nameof(Index));
-            
+
             }
-            catch(Exception exception)
-            {
-                TempData["Mensaje"] = "Ocurrio un error al querer editar";
-                throw;
-            }
+            catch (Exception ex) { ViewBag.Error = ex.Message; return View(p); }
         }
 
         // GET: PropietarioController/Delete/5
@@ -104,14 +119,15 @@ namespace Farias_Inmobiliaria.Controllers
         {
             try
             {
-                var propietario = repositorio.ObtenerPorId(id);
-                return View(propietario);
-            }
-            catch (Exception ex)
-            {
+                var p = repositorio.ObtenerPorId(id);
 
-                throw;
+                if (TempData.ContainsKey("Mensaje"))
+                    ViewBag.Mensaje = TempData["Mensaje"];
+                if (TempData.ContainsKey("Error"))
+                    ViewBag.Error = TempData["Error"];
+                return View(p);
             }
+            catch (Exception ex) { ViewBag.Error = ex.Message; return View(); }
         }
 
         // POST: PropietarioController/Delete/5
@@ -125,12 +141,14 @@ namespace Farias_Inmobiliaria.Controllers
                 TempData["Mensaje"] = "Eliminación realizada correctamente";
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-
-                TempData["Mensaje"] = "Ocurrio un error al querer eliminar";
+                TempData["Mensaje"] = "Pueden existir propiedades del Propietario. Borre primero las propiedades";
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrate = ex.StackTrace;
                 return View();
             }
+
         }
     }
 }

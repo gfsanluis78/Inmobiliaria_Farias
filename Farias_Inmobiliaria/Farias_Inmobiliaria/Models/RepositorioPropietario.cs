@@ -3,30 +3,41 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Farias_Inmobiliaria.Models
 {
     public class RepositorioPropietario : RepositorioBase
     {
-      
-        // SAe agrega Iconfiguratio y configuration, que se lo pasa del constructor base configuration
+
+        // Se agrega Iconfiguration y configuration, que se lo pasa del constructor base configuration
         public RepositorioPropietario(IConfiguration configuration) : base(configuration)
         {
 
         }
 
         // agrego los metodos
-
         public int Alta(Propietario p)
         {
             int res = -1;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string sql = @"INSERT into Propietarios (Nombre, Apellido, Dni,Telefono, Email, Password)
-                VALUES ( @nombre, @apellido, @dni, @telefono, @email, @password);
-                SELECT Scope_IDENTITY();";
+                string sql = @"
+                                INSERT into Propietarios (
+                                    Nombre, 
+                                    Apellido, 
+                                    Dni,
+                                    Telefono, 
+                                    Email, 
+                                    Password)
+                                VALUES ( 
+                                    @nombre, 
+                                    @apellido, 
+                                    @dni, 
+                                    @telefono, 
+                                    @email, 
+                                    @password);
+                                SELECT Scope_IDENTITY();";
+
                 using (SqlCommand comm = new SqlCommand(sql, conn))
                 {
                     comm.Parameters.AddWithValue("@nombre", p.Nombre);
@@ -56,16 +67,14 @@ namespace Farias_Inmobiliaria.Models
                 using (SqlCommand comm = new SqlCommand(sql, conn))
                 {
                     comm.CommandType = CommandType.Text;
-                    comm.Parameters.AddWithValue("@IdPropietario", id);
+                    comm.Parameters.AddWithValue("@id", id);
 
                     conn.Open();
 
                     res = comm.ExecuteNonQuery();
 
                     conn.Close();
-
                 }
-
             }
             return res;
         }
@@ -75,8 +84,17 @@ namespace Farias_Inmobiliaria.Models
             int res = -1;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"UPDATE Propietarios SET Nombre=@nombre, Apellido=@apellido, Dni=@dni, Telefono=@telefono, Email=@email, Password=@password " +
-                    $"WHERE IdPropietario = @id";
+                string sql = @"
+                                UPDATE Propietarios 
+                                SET 
+                                    Nombre=@nombre, 
+                                    Apellido=@apellido, 
+                                    Dni=@dni, 
+                                    Telefono=@telefono, 
+                                    Email=@email, 
+                                    Password=@password
+                                WHERE IdPropietario = @id";
+
                 using (SqlCommand comm = new SqlCommand(sql, connection))
                 {
                     comm.CommandType = CommandType.Text;
@@ -104,8 +122,18 @@ namespace Farias_Inmobiliaria.Models
             Propietario p = null;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"SELECT IdPropietario, Nombre, Apellido, Dni, Telefono, Email, Password FROM Propietarios" +
-                    $" WHERE IdPropietario=@id";
+                string sql = @"
+                                SELECT 
+                                    IdPropietario, 
+                                    Nombre, 
+                                    Apellido, 
+                                    Dni, 
+                                    Telefono, 
+                                    Email, 
+                                    Password 
+                                FROM Propietarios
+                                WHERE IdPropietario=@id";
+
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.Add("@id", SqlDbType.Int).Value = id;
@@ -123,7 +151,6 @@ namespace Farias_Inmobiliaria.Models
                             Telefono = reader.GetString(4),
                             Email = reader.GetString(5),
                             Password = reader.GetString(6),
-
                         };
                     }
                     connection.Close();
@@ -137,8 +164,17 @@ namespace Farias_Inmobiliaria.Models
             IList<Propietario> res = new List<Propietario>();
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string sql = @"SELECT IdPropietario, Nombre, Apellido, Dni, Telefono, Email, Password
-                FROM Propietarios;";
+                string sql = @"
+                                SELECT 
+                                    IdPropietario, 
+                                    Nombre, 
+                                    Apellido, 
+                                    Dni, 
+                                    Telefono, 
+                                    Email, 
+                                    Password
+                                FROM Propietarios;";
+
                 using (SqlCommand comm = new SqlCommand(sql, conn))
                 {
                     conn.Open();
@@ -154,19 +190,13 @@ namespace Farias_Inmobiliaria.Models
                             Telefono = (string)reader[nameof(Propietario.Telefono)],
                             Email = (string)reader[nameof(Propietario.Email)],
                             Password = (string)reader[nameof(Propietario.Password)]
-
                         };
                         res.Add(p);
-
                     }
                     conn.Close();
-
                 }
-
             }
             return res;
         }
-
-
     }
 }

@@ -5,7 +5,6 @@ using System;
 
 namespace Farias_Inmobiliaria.Controllers
 {
-
     public class InmuebleController : Controller
     {
         private readonly RepositorioInmueble repositorio;
