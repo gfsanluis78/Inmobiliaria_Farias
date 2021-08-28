@@ -45,7 +45,6 @@ namespace Farias_Inmobiliaria.Controllers
         // GET: PropietarioController/Create
         public ActionResult Create()
         {
-
             return View();
         }
 
@@ -86,7 +85,6 @@ namespace Farias_Inmobiliaria.Controllers
                 return View(p);
             }
             catch (Exception ex) { ViewBag.Error = ex.Message; return View(); }
-
         }
 
         // POST: PropietarioController/Edit/5
@@ -107,7 +105,7 @@ namespace Farias_Inmobiliaria.Controllers
                 //p.Password = collection["Password"];
 
                 repositorio.Modificacion(p);
-                TempData["Mensaje"] = "Datos guardados correctamente del Propietario " + id;
+                TempData["Mensaje"] = "Datos guardados correctamente del Propietario: " + id;
                 return RedirectToAction(nameof(Index));
 
             }
@@ -138,7 +136,7 @@ namespace Farias_Inmobiliaria.Controllers
             try
             {
                 repositorio.Baja(id);
-                TempData["Mensaje"] = "Eliminación realizada correctamente";
+                TempData["Mensaje"] = "Eliminación realizada correctamente: "+id;
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

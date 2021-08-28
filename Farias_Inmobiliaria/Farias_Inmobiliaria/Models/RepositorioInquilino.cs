@@ -19,9 +19,21 @@ namespace Farias_Inmobiliaria.Models
             int res = -1;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string sql = @"INSERT into Inquilinos (Nombre, Apellido, Dni,Telefono, Email)
-                VALUES ( @nombre, @apellido, @dni, @telefono, @email);
-                SELECT Scope_IDENTITY();";
+                string sql = @"
+                                INSERT into Inquilinos (
+                                    Nombre, 
+                                    Apellido, 
+                                    Dni,
+                                    Telefono, 
+                                    Email)
+                                VALUES (
+                                    @nombre, 
+                                    @apellido, 
+                                    @dni, 
+                                    @telefono, 
+                                    @email);
+                                SELECT Scope_IDENTITY();";
+
                 using (SqlCommand comm = new SqlCommand(sql, conn))
                 {
                     comm.Parameters.AddWithValue("@nombre", i.Nombre);
@@ -35,7 +47,6 @@ namespace Farias_Inmobiliaria.Models
                     conn.Close();
                     i.IdInquilino = res;
                 }
-
             }
             return res;
         }
@@ -50,16 +61,14 @@ namespace Farias_Inmobiliaria.Models
                 using (SqlCommand comm = new SqlCommand(sql, conn))
                 {
                     comm.CommandType = CommandType.Text;
-                    comm.Parameters.AddWithValue("@IdInquilino", id);
+                    comm.Parameters.AddWithValue("@id", id);
 
                     conn.Open();
 
                     res = comm.ExecuteNonQuery();
 
                     conn.Close();
-
                 }
-
             }
             return res;
         }
@@ -69,8 +78,16 @@ namespace Farias_Inmobiliaria.Models
             int res = -1;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"UPDATE Inquilinos SET Nombre=@nombre, Apellido=@apellido, Dni=@dni, Telefono=@telefono, Email=@email " +
-                    $"WHERE IdInquilino = @id";
+                string sql = @"
+                                UPDATE Inquilinos 
+                                SET 
+                                    Nombre=@nombre, 
+                                    Apellido=@apellido, 
+                                    Dni=@dni, 
+                                    Telefono=@telefono, 
+                                    Email=@email
+                                WHERE IdInquilino = @id";
+
                 using (SqlCommand comm = new SqlCommand(sql, connection))
                 {
                     comm.CommandType = CommandType.Text;
@@ -97,8 +114,17 @@ namespace Farias_Inmobiliaria.Models
             Inquilino i = null;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"SELECT IdInquilino, Nombre, Apellido, Dni, Telefono, Email FROM Inquilinos" +
-                    $" WHERE IdInquilino=@id";
+                string sql = @"
+                                SELECT 
+                                    IdInquilino, 
+                                    Nombre, 
+                                    Apellido, 
+                                    Dni, 
+                                    Telefono, 
+                                    Email 
+                                FROM Inquilinos 
+                                WHERE IdInquilino=@id";
+
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.Add("@id", SqlDbType.Int).Value = id;
@@ -129,8 +155,16 @@ namespace Farias_Inmobiliaria.Models
             IList<Inquilino> res = new List<Inquilino>();
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string sql = @"SELECT IdInquilino, Nombre, Apellido, Dni, Telefono, Email
-                FROM Inquilinos;";
+                string sql = @"
+                                SELECT 
+                                    IdInquilino, 
+                                    Nombre, 
+                                    Apellido, 
+                                    Dni, 
+                                    Telefono, 
+                                    Email
+                                FROM Inquilinos;";
+
                 using (SqlCommand comm = new SqlCommand(sql, conn))
                 {
                     conn.Open();

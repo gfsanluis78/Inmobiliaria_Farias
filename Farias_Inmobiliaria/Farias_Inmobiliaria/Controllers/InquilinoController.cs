@@ -25,15 +25,31 @@ namespace Farias_Inmobiliaria.Controllers
         // GET: InquilinoController
         public ActionResult Index()
         {
-            var lista = repositorio.ObtenerTodos();
-            return View(lista);
+            try
+            {
+                var lista = repositorio.ObtenerTodos();
+                if (TempData.ContainsKey("Id"))
+                    ViewBag.Id = TempData["Id"];
+                if (TempData.ContainsKey("Mensaje"))
+                    ViewBag.Mensaje = TempData["Mensaje"];
+                //throw new Exception(); //Prueba de cacth
+                return View(lista);
+            }
+            catch (Exception ex) { ViewBag.Error = ex.Message; return View(); }
+
         }
 
         // GET: InquilinoController/Details/5
         public ActionResult Details(int id)
         {
-            Inquilino inquilino = repositorio.ObtenerPorId(id);
-            return View(inquilino);
+            try
+            {
+                Inquilino i = repositorio.ObtenerPorId(id);
+
+                return View(i);
+            }
+            catch (Exception ex) { ViewBag.Error = ex.Message; return View(); }
+
         }
 
         // GET: InquilinoController/Create
@@ -49,56 +65,63 @@ namespace Farias_Inmobiliaria.Controllers
         {
             try
             {
-                repositorio.Alta(i);
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    repositorio.Alta(i);
+                    TempData["Id"] = i.IdInquilino;
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData["Mensaje"] = "Ocurrio un error con el modelo al Crear";
+                    return View(i);
+                }
             }
-            catch
-            {
-                TempData["Mensaje"] = "Ocurrio un error al querer crear";
-                return View();
-            }
+            catch (Exception ex) { ViewBag.Error = ex.Message; return View(i); }
         }
 
         // GET: InquilinoController/Edit/5
         public ActionResult Edit(int id)
         {
-            try {
-                var inquilino = repositorio.ObtenerPorId(id);
-                return View(inquilino);
-            } catch (Exception ex)
-            {//poner breakpoints para detectar errores
-                throw;
-            }
+            try
+            {
+                var i = repositorio.ObtenerPorId(id);
 
+                if (TempData.ContainsKey("Mensaje"))
+                    ViewBag.Mensaje = TempData["Mensaje"];
+                if (TempData.ContainsKey("Error"))
+                    ViewBag.Error = TempData["Error"];
+
+                return View(i);
+            }
+            catch (Exception ex) { ViewBag.Error = ex.Message; return View(); }
         }
 
         // POST: InquilinoController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Inquilino inquilino)
+        public ActionResult Edit(int id, IFormCollection collection)
         {
             Inquilino i = null;
+
             try
             {
                 i = repositorio.ObtenerPorId(id);
 
-                i.Nombre = inquilino.Nombre;
-                i.Apellido = inquilino.Apellido;
-                i.Dni  = inquilino.Dni;
-                i.Telefono = inquilino.Telefono;
-                i.Email = inquilino.Email;
+                i.Nombre = collection["Nombre"];
+                i.Apellido = collection["Apellido"];
+                i.Dni = collection["Dni"];
+                i.Telefono = collection["Telefono"];
+                i.Email = collection["Email"];
+                //p.Password = collection["Password"];
 
                 repositorio.Modificacion(i);
-                TempData["Mensaje"] = "Datos guardados correctamente";
-
+                TempData["Mensaje"] = "Datos guardados correctamente del Inquilino: " + id;
                 return RedirectToAction(nameof(Index));
+
             }
-            catch (Exception ex)
-            {
-                TempData["Mensaje"] = "Ocurrio un error al querer editar";
-                throw;
-            };
-            
+            catch (Exception ex) { ViewBag.Error = ex.Message; return View(i); }
+
         }
 
         // GET: InquilinoController/Delete/5
@@ -106,13 +129,15 @@ namespace Farias_Inmobiliaria.Controllers
         {
             try
             {
-                var inquilino = repositorio.ObtenerPorId(id);
-                return View(inquilino);
+                var i = repositorio.ObtenerPorId(id);
+
+                if (TempData.ContainsKey("Mensaje"))
+                    ViewBag.Mensaje = TempData["Mensaje"];
+                if (TempData.ContainsKey("Error"))
+                    ViewBag.Error = TempData["Error"];
+                return View(i);
             }
-            catch (Exception ex)
-            {//poner breakpoints para detectar errores
-                throw;
-            }
+            catch (Exception ex) { ViewBag.Error = ex.Message; return View(); }
         }
 
         // POST: InquilinoController/Delete/5
@@ -123,13 +148,14 @@ namespace Farias_Inmobiliaria.Controllers
             try
             {
                 repositorio.Baja(id);
-                TempData["Mensaje"] = "Eliminación realizada correctamente";
+                TempData["Mensaje"] = "Eliminación realizada correctamente: "+id;
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-
-                TempData["Mensaje"] = "Ocurrio un error al querer eliminar";
+                TempData["Mensaje"] = "Pueden existir contratos del Inquilino. Borre primero los contratos";
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrate = ex.StackTrace;
                 return View();
             }
         }
