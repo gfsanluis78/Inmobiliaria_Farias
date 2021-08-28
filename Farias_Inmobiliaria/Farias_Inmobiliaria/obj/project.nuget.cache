@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "jLOz7daTgkY8mSXq7sqvM4S4A2k9NfcKLaHGmCqCzYBT9dvDCnqPtaQdtvB2RC5lXqxHMe/Jueu2ERSfowXdEw==",
+  "dgSpecHash": "tYMyB3c2TYGjF/Bm2sJle6WEaGscEdC1k+UEUUucFf4u/bD3ogLkDCuV8jezzBW2nwQakXVzPk32MQcyMGJ92g==",
   "success": true,
   "projectFilePath": "C:\\Users\\Genaro\\Documents\\TUDS\\Archivos locales de VS\\Inmobiliaria\\Farias_Inmobiliaria\\Farias_Inmobiliaria\\Farias_Inmobiliaria.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Genaro\\.nuget\\packages\\google.api.commonprotos\\2.3.0\\google.api.commonprotos.2.3.0.nupkg.sha512",
+    "C:\\Users\\Genaro\\.nuget\\packages\\google.protobuf\\3.15.8\\google.protobuf.3.15.8.nupkg.sha512",
     "C:\\Users\\Genaro\\.nuget\\packages\\humanizer.core\\2.2.0\\humanizer.core.2.2.0.nupkg.sha512",
     "C:\\Users\\Genaro\\.nuget\\packages\\microsoft.aspnetcore.html.abstractions\\2.2.0\\microsoft.aspnetcore.html.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\Genaro\\.nuget\\packages\\microsoft.aspnetcore.mvc.razor.extensions\\5.0.9\\microsoft.aspnetcore.mvc.razor.extensions.5.0.9.nupkg.sha512",

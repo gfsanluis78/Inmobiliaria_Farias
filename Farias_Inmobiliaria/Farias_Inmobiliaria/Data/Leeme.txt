@@ -15,7 +15,7 @@ Tips:
 	En el administrador de nugets, se instala Microsoft.VisualStudio.Web.CodeGeneration.Design 5.0.2
 
 3.  Se crea en la raiz del proyecto la carpeta Data para alojar la base de datos.
-	Con la rutra de acceso completa de esa carpeta, se crea una base de datos con el explorador de objetos de Sql server y las tablas
+	Con la ruta de acceso completa de esa carpeta, se crea una base de datos con el explorador de objetos de Sql server y las tablas
 
 4. Crear en la carpeta Models, las clases correspondientes.
 	Recordar que las propiedades de la clase empiezan con mayusculas.

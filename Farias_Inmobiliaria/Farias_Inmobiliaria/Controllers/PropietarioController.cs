@@ -1,6 +1,7 @@
 ﻿using Farias_Inmobiliaria.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +13,9 @@ namespace Farias_Inmobiliaria.Controllers
     {
         RepositorioPropietario repositorio;
 
-        public PropietarioController()
+        public PropietarioController(IConfiguration configuration)
         {
-            repositorio = new RepositorioPropietario();
+            repositorio = new RepositorioPropietario(configuration);
         }
 
         // GET: PropietarioController

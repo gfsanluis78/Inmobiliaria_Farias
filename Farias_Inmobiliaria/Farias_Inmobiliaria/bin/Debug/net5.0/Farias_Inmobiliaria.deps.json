@@ -33,6 +33,7 @@
     ".NETCoreApp,Version=v5.0": {
       "Farias_Inmobiliaria/1.0.0": {
         "dependencies": {
+          "Google.Api.CommonProtos": "2.3.0",
           "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": "5.0.9",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "5.0.2",
           "System.Data.SqlClient": "4.8.2",
@@ -325,6 +326,35 @@
         },
         "compile": {
           "Farias_Inmobiliaria.dll": {}
+        }
+      },
+      "Google.Api.CommonProtos/2.3.0": {
+        "dependencies": {
+          "Google.Protobuf": "3.15.8"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Api.CommonProtos.dll": {
+            "assemblyVersion": "2.3.0.0",
+            "fileVersion": "2.3.0.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Google.Api.CommonProtos.dll": {}
+        }
+      },
+      "Google.Protobuf/3.15.8": {
+        "dependencies": {
+          "System.Memory": "4.5.4",
+          "System.Runtime.CompilerServices.Unsafe": "4.7.1"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Protobuf.dll": {
+            "assemblyVersion": "3.15.8.0",
+            "fileVersion": "3.15.8.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Google.Protobuf.dll": {}
         }
       },
       "Humanizer.Core/2.2.0": {
@@ -3401,6 +3431,20 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Google.Api.CommonProtos/2.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+CKoDb9ZeZGb56MUb6I8hdkUmp2kLCycljv9FWOX5OfJeJ5WW3IaO26hCX1zKsXdxeXU14viC+WEuXhFgk807w==",
+      "path": "google.api.commonprotos/2.3.0",
+      "hashPath": "google.api.commonprotos.2.3.0.nupkg.sha512"
+    },
+    "Google.Protobuf/3.15.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-tA0S9QXJq+r3CjwBlcn5glEUrbdAxhPWO4yhq5+ycn6WW6+nsvqzO6Qf6NE9XWbEz/F2QSpBTxjdTI7SvVy7CQ==",
+      "path": "google.protobuf/3.15.8",
+      "hashPath": "google.protobuf.3.15.8.nupkg.sha512"
     },
     "Humanizer.Core/2.2.0": {
       "type": "package",

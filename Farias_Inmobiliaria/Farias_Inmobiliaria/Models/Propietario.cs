@@ -49,5 +49,10 @@ namespace Farias_Inmobiliaria.Models
                       MinimumLength = 6)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        public static implicit operator int(Propietario v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

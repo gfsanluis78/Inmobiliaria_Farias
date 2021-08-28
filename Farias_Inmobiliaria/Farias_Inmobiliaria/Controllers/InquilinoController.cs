@@ -1,6 +1,7 @@
 ﻿using Farias_Inmobiliaria.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +17,9 @@ namespace Farias_Inmobiliaria.Controllers
 
         // Y hago un constructor para instanciarlo cuando se abre
 
-        public InquilinoController()
+        public InquilinoController(IConfiguration configuration)
         {
-            repositorio = new RepositorioInquilino();
+            repositorio = new RepositorioInquilino(configuration);
         }
 
         // GET: InquilinoController

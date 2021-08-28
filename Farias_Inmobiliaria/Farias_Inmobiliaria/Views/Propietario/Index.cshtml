@@ -56,9 +56,9 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                @Html.ActionLink("Editar", "Edit", new { id=item.IdPropietario }) |
-                @Html.ActionLink("Detalles", "Details", new { id=item.IdPropietario }) |
-                @Html.ActionLink("Borrar", "Delete", new { id=item.IdPropietario })
+                <a asp-action="Edit" asp-route-id="@item.IdPropietario" title="Editar"><span class="lnr lnr-pencil"></span></a>&nbsp; |
+                <a asp-action="Details" asp-route-id="@item.IdPropietario" title="Detalles"><span class="lnr lnr-eye"></span></a>&nbsp; |
+                <a asp-action="Delete" asp-route-id="@item.IdPropietario" title="Eliminar"><span class="lnr lnr-cross"></span></a>
             </td>
         </tr>
 }

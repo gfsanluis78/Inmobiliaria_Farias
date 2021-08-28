@@ -2,6 +2,31 @@
   "version": 3,
   "targets": {
     "net5.0": {
+      "Google.Api.CommonProtos/2.3.0": {
+        "type": "package",
+        "dependencies": {
+          "Google.Protobuf": "[3.15.8, 4.0.0)"
+        },
+        "compile": {
+          "lib/netstandard2.0/Google.Api.CommonProtos.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Api.CommonProtos.dll": {}
+        }
+      },
+      "Google.Protobuf/3.15.8": {
+        "type": "package",
+        "dependencies": {
+          "System.Memory": "4.5.3",
+          "System.Runtime.CompilerServices.Unsafe": "4.5.2"
+        },
+        "compile": {
+          "lib/netstandard2.0/Google.Protobuf.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Protobuf.dll": {}
+        }
+      },
       "Humanizer.Core/2.2.0": {
         "type": "package",
         "dependencies": {
@@ -1984,6 +2009,45 @@
     }
   },
   "libraries": {
+    "Google.Api.CommonProtos/2.3.0": {
+      "sha512": "+CKoDb9ZeZGb56MUb6I8hdkUmp2kLCycljv9FWOX5OfJeJ5WW3IaO26hCX1zKsXdxeXU14viC+WEuXhFgk807w==",
+      "type": "package",
+      "path": "google.api.commonprotos/2.3.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "NuGetIcon.png",
+        "google.api.commonprotos.2.3.0.nupkg.sha512",
+        "google.api.commonprotos.nuspec",
+        "lib/net461/Google.Api.CommonProtos.dll",
+        "lib/net461/Google.Api.CommonProtos.pdb",
+        "lib/net461/Google.Api.CommonProtos.xml",
+        "lib/netstandard2.0/Google.Api.CommonProtos.dll",
+        "lib/netstandard2.0/Google.Api.CommonProtos.pdb",
+        "lib/netstandard2.0/Google.Api.CommonProtos.xml"
+      ]
+    },
+    "Google.Protobuf/3.15.8": {
+      "sha512": "tA0S9QXJq+r3CjwBlcn5glEUrbdAxhPWO4yhq5+ycn6WW6+nsvqzO6Qf6NE9XWbEz/F2QSpBTxjdTI7SvVy7CQ==",
+      "type": "package",
+      "path": "google.protobuf/3.15.8",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "google.protobuf.3.15.8.nupkg.sha512",
+        "google.protobuf.nuspec",
+        "lib/net45/Google.Protobuf.dll",
+        "lib/net45/Google.Protobuf.pdb",
+        "lib/net45/Google.Protobuf.xml",
+        "lib/netstandard1.1/Google.Protobuf.dll",
+        "lib/netstandard1.1/Google.Protobuf.pdb",
+        "lib/netstandard1.1/Google.Protobuf.xml",
+        "lib/netstandard2.0/Google.Protobuf.dll",
+        "lib/netstandard2.0/Google.Protobuf.pdb",
+        "lib/netstandard2.0/Google.Protobuf.xml"
+      ]
+    },
     "Humanizer.Core/2.2.0": {
       "sha512": "rsYXB7+iUPP8AHgQ8JP2UZI2xK2KhjcdGr9E6zX3CsZaTLCaw8M35vaAJRo1rfxeaZEVMuXeaquLVCkZ7JcZ5Q==",
       "type": "package",
@@ -6743,6 +6807,7 @@
   },
   "projectFileDependencyGroups": {
     "net5.0": [
+      "Google.Api.CommonProtos >= 2.3.0",
       "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation >= 5.0.9",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 5.0.2",
       "System.Data.SqlClient >= 4.8.2"
@@ -6792,6 +6857,10 @@
       "net5.0": {
         "targetAlias": "net5.0",
         "dependencies": {
+          "Google.Api.CommonProtos": {
+            "target": "Package",
+            "version": "[2.3.0, )"
+          },
           "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": {
             "target": "Package",
             "version": "[5.0.9, )"

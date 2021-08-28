@@ -1,5 +1,6 @@
 ﻿using Farias_Inmobiliaria.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -17,10 +18,10 @@ namespace Farias_Inmobiliaria.Controllers
         private readonly RepositorioPropietario propietarios;
 
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IConfiguration configuration)
         {
             _logger = logger;
-            propietarios = new RepositorioPropietario();
+            propietarios = new RepositorioPropietario(configuration);
         }
 
         public IActionResult Index()

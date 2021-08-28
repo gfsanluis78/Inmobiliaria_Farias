@@ -43,5 +43,9 @@ namespace Farias_Inmobiliaria.Models
         //[DataType(DataType.EmailAddress, ErrorMessage = "Direccion de Correo incorrecta")]    //No la puedo personalizar
         public string Email { get; set; }
 
+        public static implicit operator int(Inquilino v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

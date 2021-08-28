@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -7,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Farias_Inmobiliaria.Models
 {
-    public class RepositorioPropietario
+    public class RepositorioPropietario : RepositorioBase
     {
-        string connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=Farias_inmonbiliaria_BD;Trusted_Connection=True;MultipleActiveResultSets=true";
-
-        public RepositorioPropietario()
+      
+        // SAe agrega Iconfiguratio y configuration, que se lo pasa del constructor base configuration
+        public RepositorioPropietario(IConfiguration configuration) : base(configuration)
         {
 
         }

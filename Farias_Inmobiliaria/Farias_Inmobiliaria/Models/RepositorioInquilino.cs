@@ -1,23 +1,19 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Farias_Inmobiliaria.Models
 {
-    public class RepositorioInquilino
+    public class RepositorioInquilino : RepositorioBase
     {
-        string connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=Farias_inmonbiliaria_BD;Trusted_Connection=True;MultipleActiveResultSets=true";
-
-        public RepositorioInquilino()
+        
+        public RepositorioInquilino(IConfiguration configuration) : base(configuration)
         {
 
         }
-
-        // agrego los metodos
-
+                
         public int Alta(Inquilino i)
         {
             int res = -1;
