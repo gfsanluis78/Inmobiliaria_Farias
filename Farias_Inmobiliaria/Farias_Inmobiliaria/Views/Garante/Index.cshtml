@@ -1,0 +1,73 @@
+﻿@model IEnumerable<Farias_Inmobiliaria.Models.Garante>
+
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+<h1>Listado de Garantes</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Crear Nuevo</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IdGarante)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Apellido)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Trabajo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Dni)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Telefono)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                Acciones
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdGarante)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Apellido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Trabajo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Dni)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Telefono)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdGarante" title="Editar"><span class="lnr lnr-pencil"></span></a>&nbsp; |
+                <a asp-action="Details" asp-route-id="@item.IdGarante" title="Detalles"><span class="lnr lnr-eye"></span></a>&nbsp; |
+                <a asp-action="Delete" asp-route-id="@item.IdGarante" title="Eliminar"><span class="lnr lnr-cross"></span></a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

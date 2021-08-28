@@ -40,7 +40,7 @@ namespace Farias_Inmobiliaria.Models
         [RegularExpression(@"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*",
                ErrorMessage = "Dirección de Correo electrónico incorrecta.")]
         [StringLength(100, ErrorMessage = "Longitud máxima 100")]
-        //[DataType(DataType.EmailAddress, ErrorMessage = "Direccion de Correo incorrecta")]    //No la puedo personalizar
+        [EmailAddress(ErrorMessage = "Direccion de Correo incorrecta")]    //No la puedo personalizar
         public string Email { get; set; }
 
         [Display(Name = "Contraseña")]

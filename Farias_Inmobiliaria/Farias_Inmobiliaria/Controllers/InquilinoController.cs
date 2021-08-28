@@ -148,7 +148,7 @@ namespace Farias_Inmobiliaria.Controllers
             try
             {
                 repositorio.Baja(id);
-                TempData["Mensaje"] = "Eliminación realizada correctamente: "+id;
+                TempData["Mensaje"] = "Eliminación realizada correctamente del id: "+id;
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
