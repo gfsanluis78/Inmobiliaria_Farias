@@ -54,15 +54,17 @@
                 <span asp-validation-for="PrecioAproximado" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label class="control-label"></label>
+                <label asp-for="IdPropietario" class="control-label"></label>
 
                 <select class="form-control" name="IdPropietario">
                     @if (ViewBag.Propietarios != null)
                     {
-                    @foreach (var item in (IList<Propietario>)ViewBag.Propietarios)
-                    {
-                        <option value="@item.IdPropietario">@(item.Nombre + " " + item.Apellido)</option>
-                    }
+                        @foreach (var item in (IList<Propietario>)ViewBag.Propietarios)
+                        {
+                            <option value="@item.IdPropietario">@(item.Nombre + " " + item.Apellido)</option>
+                        }
+                        <option value="" selected disabled>Seleccione un Propietario...</option>
+
                     }
                 </select>
 

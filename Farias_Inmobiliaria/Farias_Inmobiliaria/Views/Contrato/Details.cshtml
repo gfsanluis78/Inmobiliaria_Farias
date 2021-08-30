@@ -1,0 +1,133 @@
+﻿@model Farias_Inmobiliaria.Models.Contrato
+
+@{
+    ViewData["Title"] = "Detalles";
+    
+}
+
+<h1>Detalles</h1>
+
+<div>
+    <h4>Contrato</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IdContrato)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.IdContrato)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IdGarante)
+        </dt>
+        <dd class="col-sm-10">
+            <ul>
+                <li>
+                    Codigo: @(Model.Garante.IdGarante)
+                </li>
+                <li>
+                    Nombre: @(Model.Garante.Nombre + " " + Model.Garante.Apellido)
+
+                </li>
+                <li>
+                    Trabajo: @(Model.Garante.Trabajo)
+                </li>
+                <li>
+                    Dni: @(Model.Garante.Dni)
+                </li>
+                <li>
+                    Telefono: @(Model.Garante.Telefono)
+                </li>
+                <li>
+                    Correo electronico: @(Model.Garante.Email)
+                </li>
+                
+            </ul>
+            
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IdInmueble)
+        </dt>
+        <dd class = "col-sm-10">
+            <ul>
+                <li>
+                    Codigo: @(Model.Inmueble.IdInmueble)
+                </li>
+                <li>
+                    Tipo: @(Model.Inmueble.Tipo)
+
+                </li>
+                <li>
+                    Uso: @(Model.Inmueble.Uso)
+                </li>
+                <li>
+                    Direccion: @(Model.Inmueble.Direccion)
+                </li>
+                <li>
+                    Cantidad de Ambientes: @(Model.Inmueble.Ambientes)
+                </li>
+                <li>
+                    Superficie: @(Model.Inmueble.Superficie)
+                </li>
+                <li>
+                    Propietario: @(Model.Inmueble.Duenio.Nombre + " " + Model.Inmueble.Duenio.Apellido)
+                </li>
+                <li>
+                    Dni: @(Model.Inmueble.Duenio.Dni)
+                </li>
+                <li>
+                    Telefono: @(Model.Inmueble.Duenio.Telefono)
+                </li>
+                <li>
+                    Email: @(Model.Inmueble.Duenio.Email)
+                </li>
+            </ul>
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IdInquilino)
+        </dt>
+        <dd class="col-sm-10">
+            <ul>
+                <li>
+                    Codigo: @(Model.Inquilino.IdInquilino)
+                </li>
+                <li>
+                    Nombre: @(Model.Inquilino.Nombre + " " + Model.Inquilino.Apellido)
+
+                </li>
+                <li>
+                    Dni: @(Model.Inquilino.Dni)
+                </li>
+                <li>
+                    Telefono: @(Model.Inquilino.Telefono)
+                </li>
+                <li>
+                    Correo electronico: @(Model.Inquilino.Email)
+                </li>
+
+            </ul>
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FechaInicio)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FechaInicio)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FechaFin)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FechaFin)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MontoAlquiler)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MontoAlquiler)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.IdContrato" class="btn btn-primary">Editar</a> |
+    <a asp-action="Index" class="btn btn-primary">Volver a la Lista</a>
+</div>

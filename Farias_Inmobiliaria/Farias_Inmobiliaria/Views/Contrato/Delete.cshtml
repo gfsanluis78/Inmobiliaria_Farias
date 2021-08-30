@@ -1,0 +1,71 @@
+﻿@model Farias_Inmobiliaria.Models.Contrato
+
+@{
+    ViewData["Title"] = "Borrar";
+}
+
+<h1>Borrar</h1>
+
+<h3>Seguro quiere Borrar esto?</h3>
+<div>
+    <h4>Contrato</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IdContrato)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.IdContrato)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IdGarante)
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model != null)
+            {
+                @(Model.Garante.Nombre + " " + Model.Garante.Apellido)
+            }
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IdInmueble)
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model != null)
+            {
+                @(Model.Inmueble.Tipo + " " + Model.Inmueble.Direccion)
+            }
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IdInquilino)
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model != null)
+            {
+                @(Model.Inquilino.Nombre + " " + Model.Inquilino.Apellido)
+            }
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FechaInicio)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FechaInicio)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FechaFin)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FechaFin)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MontoAlquiler)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MontoAlquiler)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="submit" value="Borrar" class="btn btn-danger" /> |
+        <a asp-action="Index" class="btn btn-primary">Volver a la Lista</a>
+    </form>
+</div>

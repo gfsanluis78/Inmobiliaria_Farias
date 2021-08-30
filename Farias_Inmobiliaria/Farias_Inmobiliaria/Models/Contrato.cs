@@ -13,33 +13,34 @@ namespace Farias_Inmobiliaria.Models
         [Display(Name = "Código")]
         public int IdContrato { get; set; }
 
-
-        [Display(Name = "Nombre del Garante")]
+        [Display(Name = "Garante")]
         [Required(ErrorMessage = "Este campo es requerido.")]
-        public int IdGarante { get; set; }
+        public int? IdGarante { get; set; }
 
 
         [Display(Name = "Propiedad")]
         [Required(ErrorMessage = "Este campo es requerido.")]
-        public int IdInmueble { get; set; }
+        public int? IdInmueble { get; set; }
 
 
-        [Display(Name = "Nombre del Inquilino")]
+        [Display(Name = "Inquilino")]
         [Required(ErrorMessage = "Este campo es requerido.")]
-        public int IdInquilino { get; set; }
+        public int? IdInquilino { get; set; }
 
 
-        [DataType(DataType.DateTime)]
+
+        [Display(Name = "Fecha Inicio")]
+        [DataType(DataType.Date)]
         [Required(ErrorMessage = "Este campo es requerido.")]
         public DateTime? FechaInicio { get; set; }
 
-
-        [DataType(DataType.DateTime)]
+        [Display(Name = "Fecha Fin")]
+        [DataType(DataType.Date)]
         [Required(ErrorMessage = "Este campo es requerido.")]
         public DateTime? FechaFin { get; set; }
 
 
-
+        [Display(Name = "Monto Alquiler")]
         [Required(ErrorMessage = "Este campo es requerido.")]
         public string MontoAlquiler { get; set; }
 

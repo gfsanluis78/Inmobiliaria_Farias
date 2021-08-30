@@ -43,7 +43,6 @@ namespace Farias_Inmobiliaria.Models
 
 
         [Required(ErrorMessage = "Este campo es requerido.")]
-        
         [Display(Name = "Cantidad de ambientes")]
         public int Ambientes { get; set; }
                 
@@ -56,7 +55,7 @@ namespace Farias_Inmobiliaria.Models
         
         [Required(ErrorMessage = "Este campo es requerido.")]
         [Display(Name = "Dueño")]
-        public int IdPropietario { get; set; }
+        public int? IdPropietario { get; set; }
 
 
         [ForeignKey(nameof(IdPropietario))]

@@ -29,14 +29,14 @@ namespace Farias_Inmobiliaria.Models
                                     IdInquilino, 
                                     FechaInicio, 
                                     FechaFin,
-                                    MontoAlquiler,)
+                                    MontoAlquiler)
                                 VALUES(
                                     @idGarante, 
                                     @idInmueble, 
                                     @idInquilino, 
                                     @fechaInicio,  
                                     @fechaFin, 
-                                    @montoAlquiler,);
+                                    @montoAlquiler);
                                 SELECT Scope_IDENTITY();";
 
                 using (SqlCommand comm = new SqlCommand(sql, conn))
@@ -97,9 +97,8 @@ namespace Farias_Inmobiliaria.Models
                                     IdInquilino=@idInquilino, 
                                     FechaInicio=@fechaInicio, 
                                     FechaFin=@fechaFin, 
-                                    MontoAlquiler=@montoAlquiler,
-                                    
-                               WHERE IdContrato = @id";
+                                    MontoAlquiler=@montoAlquiler
+                                 WHERE IdContrato = @id";
 
                 using (SqlCommand comm = new SqlCommand(sql, connection))
                 {
@@ -136,7 +135,7 @@ namespace Farias_Inmobiliaria.Models
                                 SELECT 
                                     con.IdGarante,
                                     g.Nombre,
-                                    g.Apellido
+                                    g.Apellido,
                                     con.IdInmueble,
                                     i.Direccion,
                                     i.Tipo,
@@ -150,14 +149,25 @@ namespace Farias_Inmobiliaria.Models
                                     inq.Telefono,
                                     FechaInicio, 
                                     FechaFin,
-                                    MontoAlquiler
+                                    MontoAlquiler,
+                                    g.Trabajo,
+                                    g.Dni,
+                                    g.Telefono,
+                                    g.Email,
+                                    p.Dni,
+                                    p.Email,
+                                    i.Uso,
+                                    i.Ambientes,
+                                    i.Superficie,
+                                    inq.Dni,
+                                    inq.Email
                                 FROM 
                                     Contratos AS con 
-                                INNER JOIN Garante g ON con.IdGarante = g.IdGarante 
+                                INNER JOIN Garantes g ON con.IdGarante = g.IdGarante 
                                 INNER JOIN Inmuebles i ON con.IdInmueble = i.IdInmueble
                                 INNER JOIN Propietarios p ON i.IdPropietario = p.IdPropietario
                                 INNER JOIN Inquilinos inq ON con.IdInquilino = inq.IdInquilino
-                                WHERE i.IdContrato=@id";
+                                WHERE con.IdContrato=@id";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
@@ -174,6 +184,10 @@ namespace Farias_Inmobiliaria.Models
                                 IdGarante = reader.GetInt32(0),
                                 Nombre = reader.GetString(1),
                                 Apellido = reader.GetString(2),
+                                Trabajo = reader.GetString(17),
+                                Dni = reader.GetString(18),
+                                Telefono = reader.GetString(19),
+                                Email = reader.GetString(20),
                             },
 
                             Inmueble = new Inmueble
@@ -187,7 +201,12 @@ namespace Farias_Inmobiliaria.Models
                                     Nombre = reader.GetString(7),
                                     Apellido = reader.GetString(8),
                                     Telefono = reader.GetString(9),
-                                }
+                                    Dni = reader.GetString(21),
+                                    Email = reader.GetString(22),
+                                },
+                                Uso = reader.GetString(23),
+                                Ambientes = reader.GetInt32(24),
+                                Superficie = reader.GetString(25),
                             },
 
                             Inquilino = new Inquilino
@@ -196,11 +215,14 @@ namespace Farias_Inmobiliaria.Models
                                 Nombre = reader.GetString(11),
                                 Apellido = reader.GetString(12),
                                 Telefono = reader.GetString(13),
+                                Dni = reader.GetString(26),
+                                Email = reader.GetString(27),
                             },
 
                             FechaInicio = reader.GetDateTime(14),
                             FechaFin = reader.GetDateTime(15),
-                            MontoAlquiler = reader.GetString(16)
+                            MontoAlquiler = reader.GetString(16),
+                            IdContrato = id
                         };
                     }
                     connection.Close();
@@ -221,7 +243,7 @@ namespace Farias_Inmobiliaria.Models
                                SELECT 
                                     con.IdGarante,
                                     g.Nombre,
-                                    g.Apellido
+                                    g.Apellido,
                                     con.IdInmueble,
                                     i.Direccion,
                                     i.Tipo,
@@ -233,16 +255,16 @@ namespace Farias_Inmobiliaria.Models
                                     inq.Nombre,
                                     inq.Apellido,
                                     inq.Telefono,
+                                    con.IdContrato,
                                     FechaInicio, 
                                     FechaFin,
                                     MontoAlquiler
                                 FROM 
-                                    Contratos AS con 
-                                INNER JOIN Garante g ON con.IdGarante = g.IdGarante 
+                                    Contratos con 
+                                INNER JOIN Garantes g ON con.IdGarante = g.IdGarante 
                                 INNER JOIN Inmuebles i ON con.IdInmueble = i.IdInmueble
                                 INNER JOIN Propietarios p ON i.IdPropietario = p.IdPropietario
-                                INNER JOIN Inquilinos inq ON con.IdInquilino = inq.IdInquilino
-                                WHERE i.IdContrato=@id";
+                                INNER JOIN Inquilinos inq ON con.IdInquilino = inq.IdInquilino";
 
                 using (SqlCommand comm = new SqlCommand(sql, conn))
                 {
@@ -283,9 +305,10 @@ namespace Farias_Inmobiliaria.Models
                                 Telefono = reader.GetString(13),
                             },
 
-                            FechaInicio = reader.GetDateTime(14),
-                            FechaFin = reader.GetDateTime(15),
-                            MontoAlquiler = reader.GetString(16)
+                            IdContrato = reader.GetInt32(14),
+                            FechaInicio = reader.GetDateTime(15),
+                            FechaFin = reader.GetDateTime(16),
+                            MontoAlquiler = reader.GetString(17)
                         };
                         res.Add(c);
                     }

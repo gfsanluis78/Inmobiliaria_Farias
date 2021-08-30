@@ -429,3 +429,8 @@ C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobi
 C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobiliaria\Farias_Inmobiliaria\obj\Debug\net5.0\Razor\Views\Garante\Create.cshtml.g.cs
 C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobiliaria\Farias_Inmobiliaria\obj\Debug\net5.0\Razor\Views\Garante\Edit.cshtml.g.cs
 C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobiliaria\Farias_Inmobiliaria\obj\Debug\net5.0\Razor\Views\Garante\Delete.cshtml.g.cs
+C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobiliaria\Farias_Inmobiliaria\obj\Debug\net5.0\Razor\Views\Contrato\Index.cshtml.g.cs
+C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobiliaria\Farias_Inmobiliaria\obj\Debug\net5.0\Razor\Views\Contrato\Create.cshtml.g.cs
+C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobiliaria\Farias_Inmobiliaria\obj\Debug\net5.0\Razor\Views\Contrato\Edit.cshtml.g.cs
+C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobiliaria\Farias_Inmobiliaria\obj\Debug\net5.0\Razor\Views\Contrato\Details.cshtml.g.cs
+C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobiliaria\Farias_Inmobiliaria\obj\Debug\net5.0\Razor\Views\Contrato\Delete.cshtml.g.cs
