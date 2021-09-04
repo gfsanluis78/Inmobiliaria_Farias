@@ -28,7 +28,11 @@ namespace Farias_Inmobiliaria.Controllers
                 //throw new Exception(); //Prueba de cacth
                 return View(lista);
             }
-            catch (Exception ex) { ViewBag.Error = ex.Message; return View(); }
+            catch (Exception ex) 
+            { 
+                ViewBag.Error = ex.Message; 
+                return View(); 
+            }
         }
 
         // GET: PropietarioController/Details/5
@@ -39,7 +43,11 @@ namespace Farias_Inmobiliaria.Controllers
                 Propietario P = repositorio.ObtenerPorId(id);
                 return View(P);
             }
-            catch (Exception ex) { ViewBag.Error = ex.Message; return View(); }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View(); 
+            }
         }
 
         // GET: PropietarioController/Create
@@ -67,7 +75,11 @@ namespace Farias_Inmobiliaria.Controllers
                     return View(p);
                 }
             }
-            catch (Exception ex) { ViewBag.Error = ex.Message; return View(p); }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View(p);
+            }
         }
 
         // GET: PropietarioController/Edit/5
@@ -84,7 +96,11 @@ namespace Farias_Inmobiliaria.Controllers
 
                 return View(p);
             }
-            catch (Exception ex) { ViewBag.Error = ex.Message; return View(); }
+            catch (Exception ex) 
+            {
+                ViewBag.Error = ex.Message;
+                return View();
+            }
         }
 
         // POST: PropietarioController/Edit/5
@@ -109,7 +125,11 @@ namespace Farias_Inmobiliaria.Controllers
                 return RedirectToAction(nameof(Index));
 
             }
-            catch (Exception ex) { ViewBag.Error = ex.Message; return View(p); }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message; 
+                return View(p);
+            }
         }
 
         // GET: PropietarioController/Delete/5
@@ -125,7 +145,11 @@ namespace Farias_Inmobiliaria.Controllers
                     ViewBag.Error = TempData["Error"];
                 return View(p);
             }
-            catch (Exception ex) { ViewBag.Error = ex.Message; return View(); }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message; 
+                return View();
+            }
         }
 
         // POST: PropietarioController/Delete/5

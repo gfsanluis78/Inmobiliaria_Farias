@@ -25,12 +25,15 @@
                 @Html.DisplayNameFor(model => model.Tipo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PrecioAproximado)
+                @Html.DisplayNameFor(model => model.MontoAlquilerPropuesto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Disponibilidad)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.IdPropietario)
             </th>
-           
+
             <th>Acciones</th>
         </tr>
     </thead>
@@ -46,12 +49,15 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Superficie)
             </td>
-          
+
             <td>
                 @Html.DisplayFor(modelItem => item.Tipo)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PrecioAproximado)
+                @Html.DisplayFor(modelItem => item.MontoAlquilerPropuesto)
+            </td>
+            <td>
+                @(item.Disponibilidad == false ? "No disponible" : "Disponible")
             </td>
             <td>
                 @(item.Duenio.Nombre + " " + item.Duenio.Apellido)
@@ -59,7 +65,7 @@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.IdInmueble" title="Editar"><span class="lnr lnr-pencil"></span></a>&nbsp; |
                 <a asp-action="Details" asp-route-id="@item.IdInmueble" title="Detalles"><span class="lnr lnr-eye"></span></a>&nbsp; |
-                <a asp-action="Delete" asp-route-id="@item.IdInmueble" title="Eliminar"><span class="lnr lnr-cross"></span></a> 
+                <a asp-action="Delete" asp-route-id="@item.IdInmueble" title="Eliminar"><span class="lnr lnr-cross"></span></a>
             </td>
         </tr>
 }

@@ -52,7 +52,15 @@ namespace Farias_Inmobiliaria.Models
         [Display(Name = "Precio aproximado")]
         public String PrecioAproximado { get; set; }
 
-        
+        [Required(ErrorMessage = "Este campo es requerido.")]
+        [RegularExpression("^-?\\d+(?:,\\d+)?$", ErrorMessage = "Solo numeros y coma")]
+        [Display(Name = "Monto alquiler Propuesto")]
+        public String MontoAlquilerPropuesto { get; set; }
+
+        [Display(Name = "Disponibilidad")]
+        public bool Disponibilidad { get; set; }
+
+
         [Required(ErrorMessage = "Este campo es requerido.")]
         [Display(Name = "Dueño")]
         public int? IdPropietario { get; set; }

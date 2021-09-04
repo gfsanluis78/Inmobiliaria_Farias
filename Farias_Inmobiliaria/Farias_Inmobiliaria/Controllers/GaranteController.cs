@@ -31,7 +31,10 @@ namespace Farias_Inmobiliaria.Controllers
                 //throw new Exception(); //Prueba de cacth
                 return View(lista);
             }
-            catch (Exception ex) { ViewBag.Error = ex.Message; return View(); }
+            catch (Exception ex) 
+            {
+                ViewBag.Error = ex.Message; 
+                return View(); }
         }
 
         // GET: GaranteController/Details/5
@@ -43,7 +46,11 @@ namespace Farias_Inmobiliaria.Controllers
 
                 return View(i);
             }
-            catch (Exception ex) { ViewBag.Error = ex.Message; return View(); }
+            catch (Exception ex) 
+            {
+                ViewBag.Error = ex.Message; 
+                return View(); 
+            }
 
         }
 
@@ -72,7 +79,11 @@ namespace Farias_Inmobiliaria.Controllers
                     return View(g);
                 }
             }
-            catch (Exception ex) { ViewBag.Error = ex.Message; return View(g); }
+            catch (Exception ex) 
+            {
+                ViewBag.Error = ex.Message; 
+                return View(g); 
+            }
         }
 
         // GET: GaranteController/Edit/5
@@ -89,7 +100,11 @@ namespace Farias_Inmobiliaria.Controllers
 
                 return View(i);
             }
-            catch (Exception ex) { ViewBag.Error = ex.Message; return View(); }
+            catch (Exception ex) 
+            {
+                ViewBag.Error = ex.Message; 
+                return View(); 
+            }
         }
 
         // POST: GaranteController/Edit/5
@@ -115,7 +130,11 @@ namespace Farias_Inmobiliaria.Controllers
                 return RedirectToAction(nameof(Index));
 
             }
-            catch (Exception ex) { ViewBag.Error = ex.Message; return View(g); }
+            catch (Exception ex) 
+            {
+                ViewBag.Error = ex.Message; 
+                return View(g); 
+            }
 
         }
 
@@ -132,7 +151,11 @@ namespace Farias_Inmobiliaria.Controllers
                     ViewBag.Error = TempData["Error"];
                 return View(g);
             }
-            catch (Exception ex) { ViewBag.Error = ex.Message; return View(); }
+            catch (Exception ex) 
+            { 
+                ViewBag.Error = ex.Message; 
+                return View(); 
+            }
         }
 
         // POST: GaranteController/Delete/5

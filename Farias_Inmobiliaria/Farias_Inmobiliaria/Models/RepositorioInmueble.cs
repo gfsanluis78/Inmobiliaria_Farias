@@ -29,6 +29,8 @@ namespace Farias_Inmobiliaria.Models
                                     Tipo, 
                                     Ambientes, 
                                     PrecioAproximado, 
+                                    MontoAlquilerPropuesto,
+                                    Disponibilidad,
                                     IdPropietario)
                                 VALUES  
                                     (@direccion, 
@@ -38,7 +40,9 @@ namespace Farias_Inmobiliaria.Models
                                     @uso, 
                                     @tipo, 
                                     @ambientes, 
-                                    @precioAproximado, 
+                                    @precioAproximado,
+                                    @montoAlquilerPropuesto,    
+                                    @disponibilidad,
                                     @idPropietario);
                                 SELECT Scope_IDENTITY();";
 
@@ -52,6 +56,8 @@ namespace Farias_Inmobiliaria.Models
                     comm.Parameters.AddWithValue("@tipo", i.Tipo);
                     comm.Parameters.AddWithValue("@ambientes", i.Ambientes);
                     comm.Parameters.AddWithValue("@precioAproximado", i.PrecioAproximado);
+                    comm.Parameters.AddWithValue("@montoAlquilerPropuesto", i.MontoAlquilerPropuesto);
+                    comm.Parameters.AddWithValue("@disponibilidad", i.Disponibilidad);
                     comm.Parameters.AddWithValue("@idPropietario", i.IdPropietario);
 
                     conn.Open();
@@ -99,7 +105,9 @@ namespace Farias_Inmobiliaria.Models
                                     Uso=@uso, 
                                     Tipo=@tipo,
                                     Ambientes=@ambientes, 
-                                    PrecioAproximado=@precioAproximado, 
+                                    PrecioAproximado=@precioAproximado,
+                                    MontoAlquilerPropuesto=@montoAlquilerPropuesto,
+                                    Disponibilidad=@disponibilidad,    
                                     IdPropietario=@idPropietario
                                WHERE IdInmueble = @id";
 
@@ -115,6 +123,8 @@ namespace Farias_Inmobiliaria.Models
                     comm.Parameters.AddWithValue("@tipo", i.Tipo);
                     comm.Parameters.AddWithValue("@ambientes", i.Ambientes);
                     comm.Parameters.AddWithValue("@precioAproximado", i.PrecioAproximado);
+                    comm.Parameters.AddWithValue("@montoAlquilerPropuesto", i.MontoAlquilerPropuesto);
+                    comm.Parameters.AddWithValue("@disponibilidad", i.Disponibilidad);
                     comm.Parameters.AddWithValue("@idPropietario", i.IdPropietario);
 
                     comm.Parameters.AddWithValue("@id", i.IdInmueble);
@@ -145,6 +155,8 @@ namespace Farias_Inmobiliaria.Models
                                     Tipo, 
                                     Ambientes, 
                                     PrecioAproximado,
+                                    MontoalquilerPropuesto,
+                                    Disponibilidad,
                                     p.IdPropietario,
                                     p.Nombre,
                                     p.Apellido
@@ -169,11 +181,13 @@ namespace Farias_Inmobiliaria.Models
                             Tipo = reader.GetString(6),
                             Ambientes = reader.GetInt32(7),
                             PrecioAproximado = reader.GetString(8),
+                            MontoAlquilerPropuesto = reader.GetString(9),
+                            Disponibilidad = reader.GetBoolean(10),
                             Duenio = new Propietario
                             {
-                                IdPropietario = reader.GetInt32(9),
-                                Nombre = reader.GetString(10),
-                                Apellido = reader.GetString(11)
+                                IdPropietario = reader.GetInt32(11),
+                                Nombre = reader.GetString(12),
+                                Apellido = reader.GetString(13)
 
                             },
                         };
@@ -199,7 +213,9 @@ namespace Farias_Inmobiliaria.Models
                                     Uso, 
                                     Ambientes, 
                                     Tipo, 
-                                    PrecioAproximado, 
+                                    PrecioAproximado,
+                                    MontoAlquilerPropuesto,
+                                    Disponibilidad,
                                     i.IdPropietario, 
                                     p.Nombre, 
                                     p.Apellido 
@@ -225,11 +241,13 @@ namespace Farias_Inmobiliaria.Models
                             Ambientes = reader.GetInt32(6),
                             Tipo = reader.GetString(7),
                             PrecioAproximado = reader.GetString(8),
+                            MontoAlquilerPropuesto = reader.GetString(9),
+                            Disponibilidad = reader.GetBoolean(10),
                             Duenio = new Propietario
                             {
-                                IdPropietario = reader.GetInt32(9),
-                                Nombre = reader.GetString(10),
-                                Apellido = reader.GetString(11)
+                                IdPropietario = reader.GetInt32(11),
+                                Nombre = reader.GetString(12),
+                                Apellido = reader.GetString(13)
 
                             },
                         };

@@ -35,7 +35,11 @@ namespace Farias_Inmobiliaria.Controllers
                 //throw new Exception(); //Prueba de cacth
                 return View(lista);
             }
-            catch (Exception ex) { ViewBag.Error = ex.Message; return View(); }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
+            }
 
         }
 
@@ -48,7 +52,11 @@ namespace Farias_Inmobiliaria.Controllers
 
                 return View(i);
             }
-            catch (Exception ex) { ViewBag.Error = ex.Message; return View(); }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
+            }
 
         }
 
@@ -77,7 +85,11 @@ namespace Farias_Inmobiliaria.Controllers
                     return View(i);
                 }
             }
-            catch (Exception ex) { ViewBag.Error = ex.Message; return View(i); }
+            catch (Exception ex) 
+            { 
+                ViewBag.Error = ex.Message; 
+                return View(i); 
+            }
         }
 
         // GET: InquilinoController/Edit/5
@@ -94,7 +106,11 @@ namespace Farias_Inmobiliaria.Controllers
 
                 return View(i);
             }
-            catch (Exception ex) { ViewBag.Error = ex.Message; return View(); }
+            catch (Exception ex) 
+            { 
+                ViewBag.Error = ex.Message; 
+                return View(); 
+            }
         }
 
         // POST: InquilinoController/Edit/5
@@ -120,7 +136,11 @@ namespace Farias_Inmobiliaria.Controllers
                 return RedirectToAction(nameof(Index));
 
             }
-            catch (Exception ex) { ViewBag.Error = ex.Message; return View(i); }
+            catch (Exception ex) 
+            {
+                ViewBag.Error = ex.Message; 
+                return View(i); 
+            }
 
         }
 
@@ -137,7 +157,11 @@ namespace Farias_Inmobiliaria.Controllers
                     ViewBag.Error = TempData["Error"];
                 return View(i);
             }
-            catch (Exception ex) { ViewBag.Error = ex.Message; return View(); }
+            catch (Exception ex) 
+            {
+                ViewBag.Error = ex.Message; 
+                return View();
+            }
         }
 
         // POST: InquilinoController/Delete/5
@@ -148,7 +172,7 @@ namespace Farias_Inmobiliaria.Controllers
             try
             {
                 repositorio.Baja(id);
-                TempData["Mensaje"] = "Eliminación realizada correctamente del id: "+id;
+                TempData["Mensaje"] = "Eliminación realizada correctamente del id: " + id;
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

@@ -42,7 +42,11 @@ namespace Farias_Inmobiliaria.Controllers
                 //throw new Exception(); //Prueba de cacth
                 return View(lista);
             }
-            catch (Exception ex) { ViewBag.Error = ex.Message; return View(); }
+            catch (Exception ex) 
+            { 
+                ViewBag.Error = ex.Message; 
+                return View(); 
+            }
         }
 
         // GET: ContratoController/Details/5
@@ -53,8 +57,8 @@ namespace Farias_Inmobiliaria.Controllers
                 Contrato contrato = repositorio.ObtenerPorId(id);
                 return View(contrato);
             }
-            catch (Exception ex) {
-                
+            catch (Exception ex) 
+            {
                 ViewBag.Error = ex.Message;
                 if (TempData.ContainsKey("Id"))
                     ViewBag.Id = TempData["Id"];
@@ -74,7 +78,10 @@ namespace Farias_Inmobiliaria.Controllers
                 ViewBag.Inquilinos = repositorioInquilino.ObtenerTodos();
                 return View();
             }
-            catch (Exception ex) { ViewBag.Error = ex.Message; return View();
+            catch (Exception ex) 
+            { 
+                ViewBag.Error = ex.Message; 
+                return View();
             }
         }
 
@@ -103,7 +110,10 @@ namespace Farias_Inmobiliaria.Controllers
 
 
             }
-            catch (Exception ex) { ViewBag.Error = ex.Message; return View(c); }
+            catch (Exception ex) 
+            { 
+                ViewBag.Error = ex.Message; 
+                return View(c); }
         }
 
         // GET: ContratoController/Edit/5
@@ -123,7 +133,11 @@ namespace Farias_Inmobiliaria.Controllers
 
                 return View(contrato);
             }
-            catch (Exception ex) { ViewBag.Error = ex.Message; return RedirectToAction(nameof(Index)) ; }
+            catch (Exception ex) 
+            { 
+                ViewBag.Error = ex.Message; 
+                return RedirectToAction(nameof(Index)) ; 
+            }
         }
 
         // POST: ContratoController/Edit/5
