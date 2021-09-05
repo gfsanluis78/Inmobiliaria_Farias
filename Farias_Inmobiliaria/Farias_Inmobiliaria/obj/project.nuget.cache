@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "tYMyB3c2TYGjF/Bm2sJle6WEaGscEdC1k+UEUUucFf4u/bD3ogLkDCuV8jezzBW2nwQakXVzPk32MQcyMGJ92g==",
+  "dgSpecHash": "Wa9mmPyE2xREpOdMhklRdJzJz70QSN9iUmkksatGhACtUzdE4UCkELRlaFjnQa0RjhWXYZojPB2fx8/PO7is2w==",
   "success": true,
   "projectFilePath": "C:\\Users\\Genaro\\Documents\\TUDS\\Archivos locales de VS\\Inmobiliaria\\Farias_Inmobiliaria\\Farias_Inmobiliaria\\Farias_Inmobiliaria.csproj",
   "expectedPackageFiles": [
@@ -57,6 +57,7 @@
     "C:\\Users\\Genaro\\.nuget\\packages\\runtime.win-arm64.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-arm64.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
     "C:\\Users\\Genaro\\.nuget\\packages\\runtime.win-x64.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-x64.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
     "C:\\Users\\Genaro\\.nuget\\packages\\runtime.win-x86.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-x86.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
+    "C:\\Users\\Genaro\\.nuget\\packages\\serilog\\2.10.0\\serilog.2.10.0.nupkg.sha512",
     "C:\\Users\\Genaro\\.nuget\\packages\\system.appcontext\\4.3.0\\system.appcontext.4.3.0.nupkg.sha512",
     "C:\\Users\\Genaro\\.nuget\\packages\\system.buffers\\4.3.0\\system.buffers.4.3.0.nupkg.sha512",
     "C:\\Users\\Genaro\\.nuget\\packages\\system.collections\\4.3.0\\system.collections.4.3.0.nupkg.sha512",

@@ -1,0 +1,92 @@
+﻿@model Farias_Inmobiliaria.Models.Pago
+
+@{
+    ViewData["Title"] = "Crear";
+}
+
+<h1>Crear</h1>
+
+<h4>Pago</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="NumeroPago" class="control-label"></label>
+                <input type="number" id="numPago" asp-for="NumeroPago" class="form-control" readonly onfocus="this.blur()"/>
+                <span asp-validation-for="NumeroPago" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdContrato" class="control-label"></label>
+
+                <select id="selectContrato" form-control" name="IdContrato">
+                    @if (ViewBag.Contratos != null)
+                    {
+                        @foreach (var item in (IList<Contrato>)ViewBag.Contratos)
+                        {
+                            <option value="@item.IdContrato">@(item.Inmueble.IdInmueble + "- " + item.Inmueble.Tipo + " " + item.Inmueble.Direccion)</option>
+                        }
+                        <option value="" selected disabled>Seleccione un Contrato...</option>
+
+                    }
+                </select>
+
+                <span asp-validation-for="IdContrato" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Fecha" class="control-label"></label>
+                <input asp-for="Fecha" class="form-control" />
+                <span asp-validation-for="Fecha" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Importe" class="control-label"></label>
+                <input asp-for="Importe" class="form-control" />
+                <span asp-validation-for="Importe" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Crear" class="btn btn-primary" /> |
+                <a asp-action="Index" class="btn btn-primary">Volver a la Lista</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript" onl>
+
+    function init() {
+        //$('.alert').alert();
+        //siguienteNumeroPago(2);
+    }
+
+    var selCont = document.getElementById("selectContrato");
+    var elNumero = document.getElementById("numPago")
+
+
+
+    function siguienteNumeroPago(idContrato) {
+        
+			return $.ajax({
+				url: `@Url.Action("numPagoSiguiente", "Pago")/${idContrato}`,
+
+			}).done(res => {
+                console.log("Búsqueda: ", res.num);
+                elNumero.innerHTML = res.num;
+                elNumero.value = res.num+"";
+                
+			}).fail(res => {
+				console.log("Error: ", res.num);
+            });
+    }
+    selCont.addEventListener('change', () => {
+        siguienteNumeroPago(selCont.value);
+    })
+
+
+</script>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

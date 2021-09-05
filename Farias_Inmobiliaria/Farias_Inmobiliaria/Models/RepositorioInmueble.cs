@@ -17,7 +17,7 @@ namespace Farias_Inmobiliaria.Models
         public int Alta(Inmueble i)
         {
             int res = -1;
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new(connectionString))
             {
                 string sql = @"
                                 INSERT into Inmuebles(
@@ -46,25 +46,23 @@ namespace Farias_Inmobiliaria.Models
                                     @idPropietario);
                                 SELECT Scope_IDENTITY();";
 
-                using (SqlCommand comm = new SqlCommand(sql, conn))
-                {
-                    comm.Parameters.AddWithValue("@direccion", i.Direccion);
-                    comm.Parameters.AddWithValue("@superficie", i.Superficie);
-                    comm.Parameters.AddWithValue("@latitud", i.Latitud);
-                    comm.Parameters.AddWithValue("@longitud", i.Longitud);
-                    comm.Parameters.AddWithValue("@uso", i.Uso);
-                    comm.Parameters.AddWithValue("@tipo", i.Tipo);
-                    comm.Parameters.AddWithValue("@ambientes", i.Ambientes);
-                    comm.Parameters.AddWithValue("@precioAproximado", i.PrecioAproximado);
-                    comm.Parameters.AddWithValue("@montoAlquilerPropuesto", i.MontoAlquilerPropuesto);
-                    comm.Parameters.AddWithValue("@disponibilidad", i.Disponibilidad);
-                    comm.Parameters.AddWithValue("@idPropietario", i.IdPropietario);
+                using SqlCommand comm = new(sql, conn);
+                comm.Parameters.AddWithValue("@direccion", i.Direccion);
+                comm.Parameters.AddWithValue("@superficie", i.Superficie);
+                comm.Parameters.AddWithValue("@latitud", i.Latitud);
+                comm.Parameters.AddWithValue("@longitud", i.Longitud);
+                comm.Parameters.AddWithValue("@uso", i.Uso);
+                comm.Parameters.AddWithValue("@tipo", i.Tipo);
+                comm.Parameters.AddWithValue("@ambientes", i.Ambientes);
+                comm.Parameters.AddWithValue("@precioAproximado", i.PrecioAproximado);
+                comm.Parameters.AddWithValue("@montoAlquilerPropuesto", i.MontoAlquilerPropuesto);
+                comm.Parameters.AddWithValue("@disponibilidad", i.Disponibilidad);
+                comm.Parameters.AddWithValue("@idPropietario", i.IdPropietario);
 
-                    conn.Open();
-                    res = Convert.ToInt32(comm.ExecuteScalar());
-                    conn.Close();
-                    i.IdInmueble = res;
-                }
+                conn.Open();
+                res = Convert.ToInt32(comm.ExecuteScalar());
+                conn.Close();
+                i.IdInmueble = res;
             }
             return res;
         }
