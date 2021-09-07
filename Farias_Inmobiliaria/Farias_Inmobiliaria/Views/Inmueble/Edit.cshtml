@@ -3,9 +3,15 @@
 @{
     ViewData["Title"] = "Editar";
     var Propietarios = (IList<Propietario>)ViewBag.Propietarios;
+    Propietario propietario = ViewBag.propietario;
+
 }
 
 <h1>Editar</h1>
+@if (propietario != null)
+{
+<h2>propietario.Nombre aca</h2>
+}
 
 <h4>Inmueble</h4>
 <hr />
@@ -83,7 +89,7 @@
 
             <div class="form-group">
                 <input type="submit" value="Guardar" class="btn btn-primary" /> |
-                <a asp-action="Index" class="btn btn-primary">Volver a la Lista</a>
+                <a asp-action="Index" class="btn btn-primary">Ir a la Lista</a>
             </div>
         </form>
     </div>

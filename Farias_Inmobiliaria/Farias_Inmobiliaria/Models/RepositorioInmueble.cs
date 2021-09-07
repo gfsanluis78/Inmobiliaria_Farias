@@ -256,5 +256,68 @@ namespace Farias_Inmobiliaria.Models
             }
             return res;
         }
+
+        // Todos los Inmbuebles de un propietario
+        public IList<Inmueble> ObtenerTodosPorId(int idDuenio)
+        {
+            IList<Inmueble> res = new List<Inmueble>();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string sql = @"
+                                SELECT 
+                                    IdInmueble, 
+                                    Direccion, 
+                                    Superficie, 
+                                    Latitud, 
+                                    Longitud, 
+                                    Uso, 
+                                    Ambientes, 
+                                    Tipo, 
+                                    PrecioAproximado,
+                                    MontoAlquilerPropuesto,
+                                    Disponibilidad,
+                                    i.IdPropietario, 
+                                    p.Nombre, 
+                                    p.Apellido 
+                                FROM Inmuebles i INNER JOIN Propietarios p 
+                                ON i.IdPropietario = p.IdPropietario
+                                WHERE i.IdPropietario = @id";
+
+                using (SqlCommand comm = new SqlCommand(sql, conn))
+                {
+                    comm.Parameters.Add("@id", SqlDbType.Int).Value = idDuenio;
+                    comm.CommandType = CommandType.Text;
+                    conn.Open();
+                    var reader = comm.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Inmueble i = new()
+                        {
+                            IdInmueble = reader.GetInt32(0),
+                            Direccion = reader.GetString(1),
+                            Superficie = reader.GetString(2),
+                            Latitud = reader.GetString(3),
+                            Longitud = reader.GetString(4),
+                            Uso = reader.GetString(5),
+                            Ambientes = reader.GetInt32(6),
+                            Tipo = reader.GetString(7),
+                            PrecioAproximado = reader.GetString(8),
+                            MontoAlquilerPropuesto = reader.GetString(9),
+                            Disponibilidad = reader.GetBoolean(10),
+                            Duenio = new Propietario
+                            {
+                                IdPropietario = reader.GetInt32(11),
+                                Nombre = reader.GetString(12),
+                                Apellido = reader.GetString(13)
+
+                            },
+                        };
+                        res.Add(i);
+                    }
+                    conn.Close();
+                }
+            }
+            return res;
+        }
     }
 }

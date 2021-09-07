@@ -43,6 +43,8 @@ namespace Farias_Inmobiliaria.Controllers
 
         }
 
+
+
         // GET: InquilinoController/Details/5
         public ActionResult Details(int id)
         {

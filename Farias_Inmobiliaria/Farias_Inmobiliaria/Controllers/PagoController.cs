@@ -107,9 +107,10 @@ namespace Farias_Inmobiliaria.Controllers
 
         // GET: PagoController/Edit/5
             public ActionResult Edit(int id)
-        {
+        { 
             try
             {
+                ViewBag.Contratos = repositorioContrato.ObtenerTodos();
                 var pago = repositorio.ObtenerPorId(id);
                 
                 if (TempData.ContainsKey("Mensaje"))
@@ -151,6 +152,14 @@ namespace Farias_Inmobiliaria.Controllers
             try
             {
                 var p = repositorio.ObtenerPorId(id);
+                var ultimo = repositorio.ObtenerElMayor(p.Contrato.IdContrato);
+                ViewBag.ultimo = ultimo;
+
+
+                if (ultimo != p.NumeroPago)
+                {
+                    ViewBag.Error = "No se puede Borrar " + id + ", Solo se puede Borrar el ultimo del contrato";
+                }
                 if (TempData.ContainsKey("Mensaje"))
                     ViewBag.Mensaje = TempData["Mensaje"];
                 if (TempData.ContainsKey("Error"))
@@ -169,6 +178,7 @@ namespace Farias_Inmobiliaria.Controllers
         public ActionResult Delete(int id, Pago p)
         {
             try
+
             {
                 repositorio.Baja(id);
                 TempData["Mensaje"] = "Eliminación realizada correctamente";
@@ -189,7 +199,40 @@ namespace Farias_Inmobiliaria.Controllers
             try
             {
                 var res = repositorio.NumeroPagoSiguiente(i);
-                return Json(new { num = res });
+                return Json(new { num = res.NumeroSiguiente, mon=res.Monto});
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Error = ex.Message });
+            }
+        }
+
+        // GET: Pago/numPagoSiguiente/idContrato
+        [Route("[controller]/MontoPropuesto/{i}", Name = "MontoPropuesto")]
+        public IActionResult MontoPropuesto(int i)
+        {
+            try
+            {
+                var res = repositorioContrato.ObtenerPorId(i);
+                return Json(new { mon = res.MontoAlquiler});
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Error = ex.Message });
+            }
+        }
+
+
+        // Control borrado para no perder correlatividad
+
+        // GET: Pago/numPagoSiguiente/idContrato
+        [Route("[controller]/EsBorrable/{i}", Name = "EsBorrable")]
+        public IActionResult EsBorrable(int i)
+        {
+            try
+            {
+                var res = repositorio.ObtenerElMayor(i);
+                return Json(new { mon = res });
             }
             catch (Exception ex)
             {

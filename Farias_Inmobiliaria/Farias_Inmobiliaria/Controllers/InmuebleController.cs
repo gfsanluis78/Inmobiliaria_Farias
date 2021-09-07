@@ -37,6 +37,29 @@ namespace Farias_Inmobiliaria.Controllers
             }
         }
 
+        // GET: Inmueble/BusquedaTodos/1
+        [Route("[controller]/BusquedaTodos/{propietario}", Name = "BusquedaTodos")]
+        public ActionResult BusquedaTodos(int propietario)
+        {
+            try
+            {
+                Propietario prop = repositorioPropietario.ObtenerPorId(propietario);
+                var lista = repositorio.ObtenerTodosPorId(propietario);
+                if (TempData.ContainsKey("Id"))
+                    ViewBag.Id = TempData["Id"];
+                if (TempData.ContainsKey("Mensaje"))
+                    ViewBag.Mensaje = TempData["Mensaje"];
+                ViewBag.propietario = prop;
+                return View(lista);
+
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
+            }
+        }
+
         // GET: InmuebleController/Details/5//   
         public ActionResult Details(int id)
         {
@@ -107,6 +130,7 @@ namespace Farias_Inmobiliaria.Controllers
                 var inmueble = repositorio.ObtenerPorId(id);
 
                 ViewBag.Propietarios = repositorioPropietario.ObtenerTodos();
+                
                 if (TempData.ContainsKey("Mensaje"))
                     ViewBag.Mensaje = TempData["Mensaje"];
                 if (TempData.ContainsKey("Error"))

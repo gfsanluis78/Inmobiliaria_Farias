@@ -57,7 +57,7 @@ namespace Farias_Inmobiliaria.Models
             int res = -1;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string sql = $"DELETE FROM Pagos WHERE IdPagos = @id";
+                string sql = $"DELETE FROM Pagos WHERE IdPago = @id";
 
                 using (SqlCommand comm = new SqlCommand(sql, conn))
                 {
@@ -83,8 +83,6 @@ namespace Farias_Inmobiliaria.Models
                 string sql = @"
                                 UPDATE Pagos 
                                 SET 
-                                    IdContrato=@idContrato, 
-                                    NumeroPago=@numeroPago, 
                                     Importe=@importe, 
                                     Fecha=@fecha
                                    
@@ -94,8 +92,6 @@ namespace Farias_Inmobiliaria.Models
                 {
                     comm.CommandType = CommandType.Text;
 
-                    comm.Parameters.AddWithValue("@idContrato", p.IdContrato);
-                    comm.Parameters.AddWithValue("@numeroPago", p.NumeroPago);
                     comm.Parameters.AddWithValue("@importe", p.Importe);
                     comm.Parameters.AddWithValue("@fecha", p.Fecha);
 
@@ -130,14 +126,17 @@ namespace Farias_Inmobiliaria.Models
                                     i.Apellido,
                                     inm.IdInmueble,
                                     inm.Tipo,
-                                    inm.Direccion
-                                                                                                                    FROM 
-                                    Pagos p INNER JOIN Contratos c INNER JOIN Inquilinos i INNER JOIN Inmuebles inm
-                               ON 
-                                    p.IdContrato = c.IdContrato 
-                                    and c.IdInquilino = i.IdInquilino
-                                    and c.IdInmueble = inm.IdInmueble
-
+                                    inm.Direccion,
+                                    IdPago,
+                                    p.IdContrato
+                               FROM 
+                                    Pagos p 
+                               INNER JOIN 
+                                    Contratos c  ON p.IdContrato = c.IdContrato 
+                               INNER JOIN 
+                                    Inquilinos i ON c.IdInquilino = i.IdInquilino
+                               INNER JOIN 
+                                    Inmuebles inm ON c.IdInmueble = inm.IdInmueble
                                WHERE p.IdPago=@id";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
@@ -169,10 +168,9 @@ namespace Farias_Inmobiliaria.Models
                                     Tipo = reader.GetString(9),
                                     Direccion = reader.GetString(10)
                                 }
-
-                            }
-
-
+                            },
+                            IdPago = reader.GetInt32(11),
+                            IdContrato = reader.GetInt32(12)
                         };
                     }
                     connection.Close();
@@ -201,14 +199,17 @@ namespace Farias_Inmobiliaria.Models
                                     inm.IdInmueble,
                                     inm.Tipo,
                                     inm.Direccion,
-
-                                    IdPago 
-                                                                                                                        FROM 
+                                    IdPago,
+                                    p.IdContrato
+                             FROM 
                                     Pagos p 
-                             INNER JOIN Contratos c ON p.IdContrato = c.IdContrato 
-                             INNER JOIN Inquilinos i ON c.IdInquilino = i.IdInquilino
-                             INNER JOIN Inmuebles inm ON c.IdInmueble = inm.IdInmueble
-                             ;";
+                             INNER JOIN 
+                                    Contratos c ON p.IdContrato = c.IdContrato 
+                             INNER JOIN 
+                                    Inquilinos i ON c.IdInquilino = i.IdInquilino
+                             INNER JOIN 
+                                    Inmuebles inm ON c.IdInmueble = inm.IdInmueble
+                             ";
 
 
                 using (SqlCommand comm = new SqlCommand(sql, conn))
@@ -252,46 +253,90 @@ namespace Farias_Inmobiliaria.Models
             return res;
         }
 
-        public int NumeroPagoSiguiente(int contrato)
+        public BusquedaSiguiente NumeroPagoSiguiente(int contrato)
         {
-            int res = -1;
-
+            BusquedaSiguiente b = null;
             {
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     string sql = @"
-                               SELECT
-                                 ISNULL(MAX (NumeroPago),0)
-                                 FROM 
-                                 Pagos p
-                                 INNER JOIN Contratos c ON p.IdContrato = c.IdContrato           
-                                 WHERE p.IdContrato = @idContrato";
+                              SELECT
+                                    ISNULL(MAX (NumeroPago),0) as Maximo, c.MontoAlquiler as Monto
+                              FROM 
+                                    Pagos p
+                              INNER JOIN 
+                                    Contratos c ON p.IdContrato = c.IdContrato           
+                              WHERE 
+                                    p.IdContrato = @idContrato 
+                              Group by c.MontoAlquiler;";
 
-                     using (SqlCommand comm = new SqlCommand(sql, connection))
+                    using (SqlCommand comm = new SqlCommand(sql, connection))
                     {
+                        comm.Parameters.Add("@idContrato", SqlDbType.Int).Value = contrato;
                         comm.CommandType = CommandType.Text;
-                        comm.Parameters.AddWithValue("@idContrato", contrato);
                         connection.Open();
-                        res = Convert.ToInt32(comm.ExecuteScalar());
-                        connection.Close();
-
-                        if (res == 0)
+                        var reader = comm.ExecuteReader();
+                        if (reader.Read())
                         {
-                            res = 1;
+                            b = new BusquedaSiguiente
+                            {
+                                NumeroSiguiente = reader.GetInt32(0) + 1,
+                                Monto = reader.GetString(1),
+                                //MontoAlquiler = reader.GetString(2)
+                            };
                         }
                         else
                         {
-                            res++;
+                            b = new()
+                            {
+                                NumeroSiguiente = 1,
+                                Monto = "0",
+                                //MontoAlquiler = "0"
+
+                            };
                         }
-                        
                         connection.Close();
-                        
                     }
                 }
             }
-       
+            return b;
+        }
 
+        public int ObtenerElMayor(int contrato)
+        {
+            int res = -1;
+            {
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    string sql = @"
+                             SELECT
+                                 MAX(NumeroPago) as Maximo
+                             FROM 
+                                Pagos
+                            WHERE 
+                                IdContrato= @idContrato"; 
+                             
+
+                    using (SqlCommand comm = new SqlCommand(sql, connection))
+                    {
+                        comm.Parameters.Add("@idContrato", SqlDbType.Int).Value = contrato;
+                        comm.CommandType = CommandType.Text;
+                        connection.Open();
+                        var reader = comm.ExecuteReader();
+                        if (reader.Read())
+                        {
+                            res = reader.GetInt32(0);
+                        }
+                        else
+                        {
+                            res = 0;
+                        }
+                        connection.Close();
+                    }
+                }
+            }
             return res;
         }
     }
