@@ -9,12 +9,13 @@ namespace Farias_Inmobiliaria.Controllers
     {
         private readonly RepositorioInmueble repositorio;
         private readonly RepositorioPropietario repositorioPropietario;
+        private readonly RepositorioContrato repositorioContrato;
 
         public InmuebleController(IConfiguration configuration)
         {
             this.repositorio = new RepositorioInmueble(configuration);
             this.repositorioPropietario = new RepositorioPropietario(configuration);
-
+            this.repositorioContrato = new RepositorioContrato(configuration);
         }
 
         // GET: InmuebleController
@@ -37,8 +38,31 @@ namespace Farias_Inmobiliaria.Controllers
             }
         }
 
+        public ActionResult IndexConContrato()
+        {
+            try
+            {
+                var contratos = repositorioContrato.ObtenerTodos();
+                ViewBag.inquilinos = contratos;
+
+                var lista = repositorio.ObtenerTodosConContrato();
+                if (TempData.ContainsKey("Id"))
+                    ViewBag.Id = TempData["Id"];
+                if (TempData.ContainsKey("Mensaje"))
+                    ViewBag.Mensaje = TempData["Mensaje"];
+                //throw new Exception(); //Prueba de cacth
+                return View(lista);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
+            }
+        }
+
+
         // GET: Inmueble/BusquedaTodos/1
-        [Route("[controller]/BusquedaTodos/{propietario}", Name = "BusquedaTodos")]
+        [Route("[controller]/BusquedaTodos/{propietario}", Name ="BusquedaTodos")]
         public ActionResult BusquedaTodos(int propietario)
         {
             try

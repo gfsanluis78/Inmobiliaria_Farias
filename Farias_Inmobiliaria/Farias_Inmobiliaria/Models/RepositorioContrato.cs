@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace Farias_Inmobiliaria.Models
 {
@@ -111,6 +111,40 @@ namespace Farias_Inmobiliaria.Models
                     comm.Parameters.AddWithValue("@fechaFin", c.FechaFin);
                     comm.Parameters.AddWithValue("@montoAlquiler", c.MontoAlquiler);
 
+                    comm.Parameters.AddWithValue("@id", c.IdContrato);
+
+
+                    connection.Open();
+
+                    res = comm.ExecuteNonQuery();
+
+                    connection.Close();
+                }
+            }
+            return res;
+        }
+
+        // #################################################
+        // Renovar contrato
+        // #################################################
+
+        public int Cancelar(Contrato c)
+        {
+            int res = -1;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sql = @"
+                                UPDATE Contratos 
+                                SET 
+                                    FechaFin=@fechaFin
+                                WHERE IdContrato = @id";
+
+                using (SqlCommand comm = new SqlCommand(sql, connection))
+                {
+                    comm.CommandType = CommandType.Text;
+
+                    comm.Parameters.AddWithValue("@fechaFin", c.FechaFin);
+                    
                     comm.Parameters.AddWithValue("@id", c.IdContrato);
 
 
@@ -231,6 +265,45 @@ namespace Farias_Inmobiliaria.Models
             return c;
         }
 
+        internal TieneContrato obtenerPorInmueble(int idInmueble)
+        {
+            TieneContrato tiene = null;
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string sql = @"
+                SELECT Count(idInmueble)
+                    from Contratos c
+                    Where Idinmueble = @id";
+
+
+                using (SqlCommand command = new SqlCommand(sql, conn))
+                {
+                    command.Parameters.Add("@id", SqlDbType.Int).Value = idInmueble;
+                    command.CommandType = CommandType.Text;
+                    conn.Open();
+                    var reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        bool res = false;
+                        if (reader.HasRows)
+                        {
+                            res = true;
+                        }
+
+                        tiene = new TieneContrato()
+                        {
+                            Tiene = res
+                        };
+
+
+                    }
+                }
+            }
+
+            return tiene;
+        }
+
 
         // ##### Obtener todos #####
 
@@ -272,7 +345,7 @@ namespace Farias_Inmobiliaria.Models
                     conn.Open();
                     var reader = comm.ExecuteReader();
                     while (reader.Read())
-                    
+
                     {
                         Contrato c = new()
                         {
@@ -317,5 +390,183 @@ namespace Farias_Inmobiliaria.Models
             }
             return res;
         }
+
+        // ##### Obtener todos vigentes #####
+
+        public IList<Contrato> ObtenerTodosVigentes()
+        {
+            IList<Contrato> res = new List<Contrato>();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string sql = @"
+                               SELECT 
+                                    con.IdGarante,
+                                    g.Nombre,
+                                    g.Apellido,
+                                    con.IdInmueble,
+                                    i.Direccion,
+                                    i.Tipo,
+                                    p.IdPropietario,
+                                    p.Nombre,
+                                    p.Apellido,
+                                    p.Telefono,
+                                    con.IdInquilino,
+                                    inq.Nombre,
+                                    inq.Apellido,
+                                    inq.Telefono,
+                                    con.IdContrato,
+                                    FechaInicio, 
+                                    FechaFin,
+                                    MontoAlquiler
+                                FROM 
+                                    Contratos con 
+                                INNER JOIN Garantes g ON con.IdGarante = g.IdGarante 
+                                INNER JOIN Inmuebles i ON con.IdInmueble = i.IdInmueble
+                                INNER JOIN Propietarios p ON i.IdPropietario = p.IdPropietario
+                                INNER JOIN Inquilinos inq ON con.IdInquilino = inq.IdInquilino
+                                WHERE 
+                                    con.FechaInicio <= GETDATE() and  con.FechaFin >= GETDATE()";
+
+                using (SqlCommand comm = new SqlCommand(sql, conn))
+                {
+                    comm.CommandType = CommandType.Text;
+                    conn.Open();
+                    var reader = comm.ExecuteReader();
+                    while (reader.Read())
+
+                    {
+                        Contrato c = new()
+                        {
+                            Garante = new Garante
+                            {
+                                IdGarante = reader.GetInt32(0),
+                                Nombre = reader.GetString(1),
+                                Apellido = reader.GetString(2),
+                            },
+
+                            Inmueble = new Inmueble
+                            {
+                                IdInmueble = reader.GetInt32(3),
+                                Direccion = reader.GetString(4),
+                                Tipo = reader.GetString(5),
+                                Duenio = new Propietario
+                                {
+                                    IdPropietario = reader.GetInt32(6),
+                                    Nombre = reader.GetString(7),
+                                    Apellido = reader.GetString(8),
+                                    Telefono = reader.GetString(9),
+                                }
+                            },
+
+                            Inquilino = new Inquilino
+                            {
+                                IdInquilino = reader.GetInt32(10),
+                                Nombre = reader.GetString(11),
+                                Apellido = reader.GetString(12),
+                                Telefono = reader.GetString(13),
+                            },
+
+                            IdContrato = reader.GetInt32(14),
+                            FechaInicio = reader.GetDateTime(15),
+                            FechaFin = reader.GetDateTime(16),
+                            MontoAlquiler = reader.GetString(17)
+                        };
+                        res.Add(c);
+                    }
+                    conn.Close();
+                }
+            }
+            return res;
+        }
+
+        // ##### Obtener todos de un inmueble #####
+
+        public IList<Contrato> ObtenerTodosDeUnInmueble(int id)
+        {
+            IList<Contrato> res = new List<Contrato>();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string sql = @"
+                               SELECT 
+                                    con.IdGarante,
+                                    g.Nombre,
+                                    g.Apellido,
+                                    con.IdInmueble,
+                                    i.Direccion,
+                                    i.Tipo,
+                                    p.IdPropietario,
+                                    p.Nombre,
+                                    p.Apellido,
+                                    p.Telefono,
+                                    con.IdInquilino,
+                                    inq.Nombre,
+                                    inq.Apellido,
+                                    inq.Telefono,
+                                    con.IdContrato,
+                                    FechaInicio, 
+                                    FechaFin,
+                                    MontoAlquiler
+                                FROM 
+                                    Contratos con 
+                                INNER JOIN Garantes g ON con.IdGarante = g.IdGarante 
+                                INNER JOIN Inmuebles i ON con.IdInmueble = i.IdInmueble
+                                INNER JOIN Propietarios p ON i.IdPropietario = p.IdPropietario
+                                INNER JOIN Inquilinos inq ON con.IdInquilino = inq.IdInquilino
+                                WHERE 
+                                    con.IdInmueble = @id";
+
+                using (SqlCommand comm = new SqlCommand(sql, conn))
+                {
+                    comm.Parameters.Add("@id", SqlDbType.Int).Value = id;
+                    comm.CommandType = CommandType.Text;
+                    conn.Open();
+                    var reader = comm.ExecuteReader();
+                    while (reader.Read())
+
+                    {
+                        Contrato c = new()
+                        {
+                            Garante = new Garante
+                            {
+                                IdGarante = reader.GetInt32(0),
+                                Nombre = reader.GetString(1),
+                                Apellido = reader.GetString(2),
+                            },
+
+                            Inmueble = new Inmueble
+                            {
+                                IdInmueble = reader.GetInt32(3),
+                                Direccion = reader.GetString(4),
+                                Tipo = reader.GetString(5),
+                                Duenio = new Propietario
+                                {
+                                    IdPropietario = reader.GetInt32(6),
+                                    Nombre = reader.GetString(7),
+                                    Apellido = reader.GetString(8),
+                                    Telefono = reader.GetString(9),
+                                }
+                            },
+
+                            Inquilino = new Inquilino
+                            {
+                                IdInquilino = reader.GetInt32(10),
+                                Nombre = reader.GetString(11),
+                                Apellido = reader.GetString(12),
+                                Telefono = reader.GetString(13),
+                            },
+
+                            IdContrato = reader.GetInt32(14),
+                            FechaInicio = reader.GetDateTime(15),
+                            FechaFin = reader.GetDateTime(16),
+                            MontoAlquiler = reader.GetString(17)
+                        };
+                        res.Add(c);
+                    }
+                    conn.Close();
+                }
+            }
+            return res;
+        }
+
     }
 }

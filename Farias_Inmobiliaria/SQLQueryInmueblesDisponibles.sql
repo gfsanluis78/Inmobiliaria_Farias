@@ -32,3 +32,9 @@ FROM Inmuebles i
 where 
 c.idInmueble is null 
 and i.Disponibilidad = 1
+
+
+SELECT Count(idInmueble)
+from  Contratos c
+Where Idinmueble = 1009
+

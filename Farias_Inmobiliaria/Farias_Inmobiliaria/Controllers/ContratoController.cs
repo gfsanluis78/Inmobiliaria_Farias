@@ -1,11 +1,8 @@
 ﻿using Farias_Inmobiliaria.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace Farias_Inmobiliaria.Controllers
 {
@@ -20,7 +17,7 @@ namespace Farias_Inmobiliaria.Controllers
         public ContratoController(IConfiguration configuration)
         {
             this.repositorio = new RepositorioContrato(configuration);
-            
+
             this.repositorioGarante = new RepositorioGarante(configuration);
             this.repositorioInmueble = new RepositorioInmueble(configuration);
             this.repositorioInquilino = new RepositorioInquilino(configuration);
@@ -42,10 +39,60 @@ namespace Farias_Inmobiliaria.Controllers
                 //throw new Exception(); //Prueba de cacth
                 return View(lista);
             }
-            catch (Exception ex) 
-            { 
-                ViewBag.Error = ex.Message; 
-                return View(); 
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
+            }
+        }
+
+        // GET: ContratoController
+        public ActionResult IndexSoloVigentes()
+        {
+            try
+            {
+                ViewBag.Garantes = repositorioGarante.ObtenerTodos();
+                ViewBag.Inmuebles = repositorioInmueble.ObtenerTodos();
+                ViewBag.Inquilinos = repositorioInquilino.ObtenerTodos();
+                ViewBag.Vigentes = "vigentes";
+                var lista = repositorio.ObtenerTodosVigentes();
+                if (TempData.ContainsKey("Id"))
+                    ViewBag.Id = TempData["Id"];
+                if (TempData.ContainsKey("Mensaje"))
+                    ViewBag.Mensaje = TempData["Mensaje"];
+                //throw new Exception(); //Prueba de cacth
+                return View(lista);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
+            }
+        }
+
+        // GET: ContratoController
+        [Route("[controller]/IndexUnInmueble/{inmueble}", Name = "IndexUnInmueble")]
+        public ActionResult IndexUnInmueble(int inmueble)
+        {
+            try
+            {
+                Inmueble inmu = repositorioInmueble.ObtenerPorId(inmueble);
+                ViewBag.Garantes = repositorioGarante.ObtenerTodos();
+                ViewBag.Inmuebles = repositorioInmueble.ObtenerTodos();
+                ViewBag.Inquilinos = repositorioInquilino.ObtenerTodos();
+                ViewBag.inmueble = inmu;
+                var lista = repositorio.ObtenerTodosDeUnInmueble(inmueble);
+                if (TempData.ContainsKey("Id"))
+                    ViewBag.Id = TempData["Id"];
+                if (TempData.ContainsKey("Mensaje"))
+                    ViewBag.Mensaje = TempData["Mensaje"];
+                //throw new Exception(); //Prueba de cacth
+                return View(lista);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
             }
         }
 
@@ -57,7 +104,7 @@ namespace Farias_Inmobiliaria.Controllers
                 Contrato contrato = repositorio.ObtenerPorId(id);
                 return View(contrato);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 ViewBag.Error = ex.Message;
                 if (TempData.ContainsKey("Id"))
@@ -78,9 +125,9 @@ namespace Farias_Inmobiliaria.Controllers
                 ViewBag.Inquilinos = repositorioInquilino.ObtenerTodos();
                 return View();
             }
-            catch (Exception ex) 
-            { 
-                ViewBag.Error = ex.Message; 
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
                 return View();
             }
         }
@@ -110,10 +157,11 @@ namespace Farias_Inmobiliaria.Controllers
 
 
             }
-            catch (Exception ex) 
-            { 
-                ViewBag.Error = ex.Message; 
-                return View(c); }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View(c);
+            }
         }
 
         // GET: ContratoController/Edit/5
@@ -133,10 +181,10 @@ namespace Farias_Inmobiliaria.Controllers
 
                 return View(contrato);
             }
-            catch (Exception ex) 
-            { 
-                ViewBag.Error = ex.Message; 
-                return RedirectToAction(nameof(Index)) ; 
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -149,12 +197,13 @@ namespace Farias_Inmobiliaria.Controllers
             {
                 c.IdContrato = id;
                 int result = repositorio.Modificacion(c);
-                if (result>0)
+                if (result > 0)
                 {
                     TempData["Mensaje"] = "Datos Guardados correctamente";
                     return RedirectToAction(nameof(Index));
 
-                } else if(result==0)
+                }
+                else if (result == 0)
                 {
                     TempData["Mensaje"] = "Se impacto en la base de datos pero no afecto a ninguna fila";
                     return RedirectToAction(nameof(Index));
@@ -162,6 +211,73 @@ namespace Farias_Inmobiliaria.Controllers
                 else
                 {
                     TempData["Mensaje"] = "No se lograron guardar las modificaiones";
+                    return RedirectToAction(nameof(Index));
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Garantes = repositorioGarante.ObtenerTodos();
+                ViewBag.Inmuebles = repositorioInmueble.ObtenerTodos();
+                ViewBag.Inquilino = repositorioInquilino.ObtenerTodos();
+                ViewBag.Error = ex.Message; return View(c);
+            }
+        }
+
+
+        // ##########################################
+        // renovar contrato
+        // ##########################################
+
+
+        // GET: ContratoController/Edit/5
+        public ActionResult Cancelar(int id)
+        {
+            try
+            {
+                var contrato = repositorio.ObtenerPorId(id);
+
+                ViewBag.Garantes = repositorioGarante.ObtenerTodos();
+                ViewBag.Inmuebles = repositorioInmueble.ObtenerTodos();
+                ViewBag.Inquilinos = repositorioInquilino.ObtenerTodos();
+                if (TempData.ContainsKey("Mensaje"))
+                    ViewBag.Mensaje = TempData["Mensaje"];
+                if (TempData.ContainsKey("Error"))
+                    ViewBag.Error = TempData["Error"];
+
+                return View(contrato);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        // POST: ContratoController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Cancelar(int id, Contrato c)
+        {
+            try
+            {
+                c.IdContrato = id;
+                int result = repositorio.Cancelar(c);
+                if (result > 0)
+                {
+                    TempData["Mensaje"] = "Datos cancelado correctamente";
+                    return RedirectToAction(nameof(Index));
+
+                }
+                else if (result == 0)
+                {
+                    TempData["Mensaje"] = "Se impacto en la base de datos pero no afecto a ninguna fila";
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData["Mensaje"] = "No se lograron guardar las modificaciones";
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -205,7 +321,7 @@ namespace Farias_Inmobiliaria.Controllers
             try
             {
                 repositorio.Baja(id);
-                TempData["Mensaje"] = "Eliminación realizada correctamente del id: "+id;
+                TempData["Mensaje"] = "Eliminación realizada correctamente del id: " + id;
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -215,5 +331,22 @@ namespace Farias_Inmobiliaria.Controllers
                 return View();
             }
         }
+
+
+        [Route("[controller]/tieneContrato/{idInmueble}", Name = "tieneContrato")]
+        public IActionResult tieneContrato(int idInmueble)
+        {
+            try
+            {
+                var res = repositorio.obtenerPorInmueble(idInmueble);
+                return Json(new { Datos = res });
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
     }
 }

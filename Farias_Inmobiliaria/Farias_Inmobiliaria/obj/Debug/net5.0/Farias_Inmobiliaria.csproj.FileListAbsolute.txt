@@ -450,3 +450,7 @@ C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobi
 C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobiliaria\Farias_Inmobiliaria\obj\Debug\net5.0\Razor\Views\Usuario\Details.cshtml.g.cs
 C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobiliaria\Farias_Inmobiliaria\obj\Debug\net5.0\Razor\Views\Usuario\Login.cshtml.g.cs
 C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobiliaria\Farias_Inmobiliaria\obj\Debug\net5.0\Razor\Views\Home\Restringido.cshtml.g.cs
+C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobiliaria\Farias_Inmobiliaria\obj\Debug\net5.0\Razor\Views\Contrato\IndexSoloVigentes.cshtml.g.cs
+C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobiliaria\Farias_Inmobiliaria\obj\Debug\net5.0\Razor\Views\Contrato\IndexUnInmueble.cshtml.g.cs
+C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobiliaria\Farias_Inmobiliaria\obj\Debug\net5.0\Razor\Views\Inmueble\IndexConContrato.cshtml.g.cs
+C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobiliaria\Farias_Inmobiliaria\obj\Debug\net5.0\Razor\Views\Contrato\Cancelar.cshtml.g.cs

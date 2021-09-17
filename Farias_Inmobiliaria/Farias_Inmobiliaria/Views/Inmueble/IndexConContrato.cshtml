@@ -1,0 +1,73 @@
+﻿@model IEnumerable<Farias_Inmobiliaria.Models.Inmueble>
+
+@{
+    ViewData["Title"] = "IndexConContrato";
+    IList<Contrato> lista = ViewBag.contratos;
+}
+
+<h1>Listado de Inmuebles con Contrato</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Crear Nuevo</a>
+    <a class="btn btn-primary" asp-action="Index">Ver todos los Inmuebles</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IdInmueble)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Direccion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tipo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Disponibilidad)
+            </th>
+            <th>
+                Inquilino
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdPropietario)
+            </th>
+
+            <th>Acciones</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdInmueble)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Direccion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tipo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MontoAlquilerPropuesto)
+                </td>
+                <td>
+                     El inquilino
+                </td>
+                <td>
+                    @(item.Duenio.Nombre + " " + item.Duenio.Apellido)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.IdInmueble" title="Editar"><span class="lnr lnr-pencil"></span></a>&nbsp; |
+                    <a asp-action="Details" asp-route-id="@item.IdInmueble" title="Detalles"><span class="lnr lnr-eye"></span></a>&nbsp; |
+                    <a asp-action="Delete" asp-route-id="@item.IdInmueble" title="Eliminar"><span class="lnr lnr-cross"></span></a>
+                    <a asp-controller="Contrato" asp-action="IndexUnInmueble" asp-route-id="@item.IdInmueble" title="Contratos"><span class="lnr lnr-layers"></span></a>
+
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

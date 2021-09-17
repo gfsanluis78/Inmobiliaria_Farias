@@ -8,44 +8,48 @@
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/StyleSheet.css" />
 
+    <script src="https://kit.fontawesome.com/88678501cd.js" crossorigin="anonymous"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
     <title>@ViewData["Title"] - Farias Inmobiliaria</title>
+    <style>
+
+        #menuSuperior {
+            background-color: black
+        }
+    </style>
 
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
 
-            <div class="container d-flex flex-column flex-md-row justify-content-between">
+            <div id="menuSuperior" class="container d-flex flex-column flex-md-row justify-content-between">
                 @if (!User.Identity.IsAuthenticated)
                 {
-                    <a class="py-2" asp-controller="Home" asp-action="Index"><span class="lnr lnr-home"></span> Inicio</a>
-                    <a class="py-2 d-none d-md-inline-block float-right" href="@Url.Link("login", null)"><span class="lnr lnr-enter"></span> Acceder</a>
+                    <a class="py-2" asp-controller="Home" asp-action="Index"><i class="fa fa-bars" style="font-size:24px"></i> Inicio</a>
+                    <a class="py-2 d-none d-md-inline-block float-right" href="@Url.Link("login", null)"><i class="fa fa-sign-in" style="font-size:24px"></i> Acceder</a>
                 }
                 else
                 {
                     <div>
-                        <a class="py-2 d-none d-md-inline-block" asp-controller="Home" asp-action="Index"><span class="navbar-toggler-icon"></span> Inicio</a>
-
-                        <!--<a class="btn btn-primary dropdown-toggle text-light" asp-area="#" asp-controller="Home" asp-action="Index"><span class="navbar-toggler-icon"></span> InicioInmobiliaria Farias</a>-->
-                        <!--<a class="btn btn-primary dropdown-toggle text-light" href="#" role="button" id="homeMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent" data-display="static">-->
-                        <!--<a class="btn btn-primary dropdown-toggle text-light" asp-area="#" asp-controller="Home" asp-action="Index">Inmobiliaria Farias</a>-->
-                        <!--<button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation"> el span </button>-->
-
+                        <a class="py-2 d-none d-md-inline-block" asp-controller="Home" asp-action="Index"><i class="fa fa-bars" style="font-size:24px"></i> Inicio</a>
 
                     </div>
                     <div>
 
                         <!--<a class="py-2 d-none d-md-inline-block" asp-controller="Home" asp-action="Index"><span class="lnr lnr-user"></span> Inicio</a>-->
-                        <a class="py-2 d-none d-md-inline-block" asp-controller="Propietario" asp-action="Index"><span class="lnr lnr-user"></span> Propietarios</a>
-                        <a class="py-2 d-none d-md-inline-block" asp-controller="Inquilino" asp-action="Index"><span class="lnr lnr-user"></span> Inquilinos</a>
-                        <a class="py-2 d-none d-md-inline-block" asp-controller="Inmueble" asp-action="Index"><span class="lnr lnr-apartment"></span> Inmuebles</a>
-                        <a class="py-2 d-none d-md-inline-block" asp-controller="Garante" asp-action="Index"><span class="lnr lnr-user"></span> Garantes</a>
-                        <a class="py-2 d-none d-md-inline-block" asp-controller="Contrato" asp-action="Index"><span class="lnr lnr-user"></span> Contratos</a>
-                        <a class="py-2 d-none d-md-inline-block" asp-controller="Pago" asp-action="Index"><span class="lnr lnr-user"></span> Pagos</a>
+                        <a class="py-2 d-none d-md-inline-block" asp-controller="Propietario" asp-action="Index"><i class="fa fa-user" style="font-size:24px"></i> Propietarios</a>
+                        <a class="py-2 d-none d-md-inline-block" asp-controller="Inquilino" asp-action="Index"><i class='fas fa-house-user' style='font-size:24px'></i> Inquilinos</a>
+                        <a class="py-2 d-none d-md-inline-block" asp-controller="Inmueble" asp-action="Index"><i class='fas fa-building' style='font-size:24px'></i> Inmuebles</a>
+                        <a class="py-2 d-none d-md-inline-block" asp-controller="Garante" asp-action="Index"><i class="fa fa-group" style="font-size:24px"></i> Garantes</a>
+                        <a class="py-2 d-none d-md-inline-block" asp-controller="Contrato" asp-action="Index"><i class='far fa-address-card' style='font-size:24px'></i> Contratos</a>
+                        <a class="py-2 d-none d-md-inline-block" asp-controller="Pago" asp-action="Index"><i class='fas fa-hand-holding-usd' style='font-size:24px'></i> Pagos</a>
                         @if (User.IsInRole("Administrador"))
                         {
-                            <a class="py-2 d-none d-md-inline-block" asp-controller="Usuario" asp-action="Index"><span class="lnr lnr-star"></span> Usuarios</a>
+                            <a class="py-2 d-none d-md-inline-block" asp-controller="Usuario" asp-action="Index"><i class="fa fa-user-plus" style="font-size:24px"></i> Usuarios</a>
                         }
                     </div>
 
@@ -55,8 +59,8 @@
                         </a>
 
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item text-dark" asp-controller="Usuario" asp-action="Perfil"><i class="lnr lnr-user"></i> Perfil</a>
-                            <a class="dropdown-item text-dark" asp-controller="Usuario" asp-action="Logout"><i class="lnr lnr-exit"></i> Salir</a>
+                            <a class="dropdown-item text-dark" asp-controller="Usuario" asp-action="Perfil"><i class="fa fa-user-o" style="font-size:24px"></i> Perfil</a>
+                            <a class="dropdown-item text-dark" asp-controller="Usuario" asp-action="Logout"><i class="fa fa-sign-out" style="font-size:24px"></i> Salir</a>
                         </div>
                     </div>
 
@@ -122,9 +126,7 @@
             &copy; 2021 - Inmobiliaria Farias - <a asp-area="" asp-controller="Home" asp-action="Privacy">Politicas de Privacidad</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -69,5 +69,7 @@ namespace Farias_Inmobiliaria.Models
         [ForeignKey(nameof(IdPropietario))]
         public Propietario Duenio { get; set; }
 
+        public Inquilino Inquilino { get; set; }
+
     }
 }

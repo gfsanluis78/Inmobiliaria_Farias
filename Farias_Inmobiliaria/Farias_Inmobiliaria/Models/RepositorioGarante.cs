@@ -208,7 +208,5 @@ namespace Farias_Inmobiliaria.Models
             }
             return res;
         }
-
-
     }
 }
