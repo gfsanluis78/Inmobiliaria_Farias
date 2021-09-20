@@ -4,6 +4,7 @@
     ViewData["Title"] = "Editar";
     var Propietarios = (IList<Propietario>)ViewBag.Propietarios;
     Propietario propietario = ViewBag.propietario;
+    string url = ViewBag.url;
 
 }
 
@@ -89,7 +90,7 @@
 
             <div class="form-group">
                 <input type="submit" value="Guardar" class="btn btn-primary" /> |
-                <a asp-action="Index" class="btn btn-primary">Ir a la Lista</a>
+                <a href=@url class="btn btn-primary">Ir a la Lista</a>
             </div>
         </form>
     </div>

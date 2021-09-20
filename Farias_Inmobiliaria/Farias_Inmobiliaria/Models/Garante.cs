@@ -49,5 +49,12 @@ namespace Farias_Inmobiliaria.Models
         [EmailAddress(ErrorMessage = "Direccion de Correo incorrecta")]    //No la puedo personalizar
         public string Email { get; set; }
 
+        public string GetNombreCompleto()
+        {
+            return this.Nombre + " " +this.Apellido;
+        }
+
+
     }
+
 }

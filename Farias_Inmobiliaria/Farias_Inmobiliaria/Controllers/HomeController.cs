@@ -45,5 +45,11 @@ namespace Farias_Inmobiliaria.Controllers
         {
             return View();
         }
+
+        public ActionResult Pruebas()
+        {
+            return View();
+        }
+        
     }
 }

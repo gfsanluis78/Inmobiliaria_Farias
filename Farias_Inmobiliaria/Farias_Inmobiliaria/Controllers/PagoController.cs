@@ -41,6 +41,34 @@ namespace Farias_Inmobiliaria.Controllers
             }
         }
 
+        // GET: PagoController
+        public ActionResult IndexDeUnContrato(int id)
+        {
+            try
+            {
+                Contrato contrato = repositorioContrato.ObtenerPorId(id);
+                ViewBag.desde = contrato;
+
+                var lista = repositorio.ObtenerTodosDeUnContrato(contrato);
+
+                if (lista.Count == 0)
+                {
+                    TempData["Mensaje"] = "El contrato " + contrato.IdContrato + " no tiene Pagos registrados. Puede crear el primero";
+                }
+                if (TempData.ContainsKey("Id"))
+                    ViewBag.Id = TempData["Id"];
+                if (TempData.ContainsKey("Mensaje"))
+                    ViewBag.Mensaje = TempData["Mensaje"];
+                //throw new Exception(); //Prueba de cacth
+                return View("Index",lista);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View("Index");
+            }
+        }
+
         // GET: PagoController/Details/5
         public ActionResult Details(int id)
         {
@@ -61,6 +89,7 @@ namespace Farias_Inmobiliaria.Controllers
         {
             try
             {
+                ViewBag.Pago = "solo";
                 ViewBag.Contratos = repositorioContrato.ObtenerTodos();
                 return View();
             }
@@ -77,6 +106,67 @@ namespace Farias_Inmobiliaria.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(Pago p)
+        {
+            try
+            {
+
+                if (ModelState.IsValid)
+                {
+                    p.Fecha = DateTime.Now;
+                    repositorio.Alta(p);
+                    TempData["Id"] = p.IdPago;
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+
+                    ViewBag.Contratos = repositorioContrato.ObtenerTodos();
+                    return View();
+
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
+            }
+
+        }
+
+        // Crear Pago modal
+
+        // GET: PagoController/CreateModal
+        public ActionResult CreateModal(int id)
+        {
+            try
+            {
+                Contrato contrato = repositorioContrato.ObtenerPorId(id);
+                BusquedaSiguiente pagoSiguiente = repositorio.NumeroPagoSiguiente(contrato.IdContrato);
+                Pago pago = new()
+                {
+                    NumeroPago = pagoSiguiente.NumeroSiguiente,
+                    IdContrato = contrato.IdContrato,
+                    Fecha = DateTime.Now,
+                    Importe = contrato.MontoAlquiler
+                };
+                
+                return PartialView("_CreateModal",pago);
+            }
+            catch (Exception ex)
+            {
+
+
+                ViewBag.Error = ex.Message;
+                return View();
+            }
+        }
+
+        // POST: PagoController/CreateModal
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateModal(Pago p)
         {
             try
             {
@@ -105,8 +195,12 @@ namespace Farias_Inmobiliaria.Controllers
 
         }
 
+
+
+
+
         // GET: PagoController/Edit/5
-            public ActionResult Edit(int id)
+        public ActionResult Edit(int id)
         { 
             try
             {

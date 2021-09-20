@@ -21,7 +21,7 @@
                     {
                         @foreach (var item in (IList<Garante>)ViewBag.Garantes)
                         {
-                            <option value="@item.IdGarante">@(item.Nombre + " " + item.Apellido)</option>
+                            <option value="@item.IdGarante">@(item.IdGarante + "-" +item.Nombre + " " + item.Apellido)</option>
                         }
                         <option value="" selected disabled>Seleccione un Garante...</option>
 
@@ -38,7 +38,7 @@
                     {
                         @foreach (var item in (IList<Inmueble>)ViewBag.Inmuebles)
                         {
-                            <option value="@item.IdInmueble">@(item.Tipo + " " + item.Direccion + " " +item.Duenio.Nombre + " " + item.Duenio.Apellido)</option>
+                            <option value="@item.IdInmueble">@(item.IdInmueble + "-" + item.Tipo + " " + item.Direccion + " " +item.Duenio.Nombre + " " + item.Duenio.Apellido)</option>
                         }
                         <option value="" selected disabled >Seleccione un Inmueble...</option>
 
@@ -57,7 +57,7 @@
 
                         @foreach (var item in (IList<Inquilino>)ViewBag.Inquilinos)
                         {
-                            <option value="@item.IdInquilino">@(item.Nombre + " " + item.Apellido)</option>
+                            <option value="@item.IdInquilino">@(item.IdInquilino + "-" +item.Nombre + " " + item.Apellido)</option>
                         }
                         <option value="" selected disabled>Seleccione un inquilino...</option>
 

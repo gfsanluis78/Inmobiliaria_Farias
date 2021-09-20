@@ -136,7 +136,8 @@ namespace Farias_Inmobiliaria.Models
                 string sql = @"
                                 UPDATE Contratos 
                                 SET 
-                                    FechaFin=@fechaFin
+                                    FechaFin=@fechaFin,
+                                    EstadoCancelado=@estadoCancelado
                                 WHERE IdContrato = @id";
 
                 using (SqlCommand comm = new SqlCommand(sql, connection))
@@ -144,7 +145,8 @@ namespace Farias_Inmobiliaria.Models
                     comm.CommandType = CommandType.Text;
 
                     comm.Parameters.AddWithValue("@fechaFin", c.FechaFin);
-                    
+                    comm.Parameters.AddWithValue("@estadoCancelado", true);
+
                     comm.Parameters.AddWithValue("@id", c.IdContrato);
 
 
@@ -194,7 +196,8 @@ namespace Farias_Inmobiliaria.Models
                                     i.Ambientes,
                                     i.Superficie,
                                     inq.Dni,
-                                    inq.Email
+                                    inq.Email,
+                                    EstadoCancelado
                                 FROM 
                                     Contratos AS con 
                                 INNER JOIN Garantes g ON con.IdGarante = g.IdGarante 
@@ -256,7 +259,8 @@ namespace Farias_Inmobiliaria.Models
                             FechaInicio = reader.GetDateTime(14),
                             FechaFin = reader.GetDateTime(15),
                             MontoAlquiler = reader.GetString(16),
-                            IdContrato = id
+                            IdContrato = id,
+                            EstadoCancelado = reader.GetBoolean(28)
                         };
                     }
                     connection.Close();
@@ -265,7 +269,7 @@ namespace Farias_Inmobiliaria.Models
             return c;
         }
 
-        internal TieneContrato obtenerPorInmueble(int idInmueble)
+        public TieneContrato obtenerPorInmueble(int idInmueble)
         {
             TieneContrato tiene = null;
 
@@ -331,7 +335,8 @@ namespace Farias_Inmobiliaria.Models
                                     con.IdContrato,
                                     FechaInicio, 
                                     FechaFin,
-                                    MontoAlquiler
+                                    MontoAlquiler,
+                                    EstadoCancelado
                                 FROM 
                                     Contratos con 
                                 INNER JOIN Garantes g ON con.IdGarante = g.IdGarante 
@@ -381,7 +386,9 @@ namespace Farias_Inmobiliaria.Models
                             IdContrato = reader.GetInt32(14),
                             FechaInicio = reader.GetDateTime(15),
                             FechaFin = reader.GetDateTime(16),
-                            MontoAlquiler = reader.GetString(17)
+                            MontoAlquiler = reader.GetString(17),
+                            EstadoCancelado = reader.GetBoolean(18)
+                            //EstadoCancelado = reader[nameof(Contrato.EstadoCancelado)] == DBNull.Value ? null : reader.GetBoolean(18)
                         };
                         res.Add(c);
                     }
@@ -417,7 +424,8 @@ namespace Farias_Inmobiliaria.Models
                                     con.IdContrato,
                                     FechaInicio, 
                                     FechaFin,
-                                    MontoAlquiler
+                                    MontoAlquiler,
+                                    EstadoCancelado
                                 FROM 
                                     Contratos con 
                                 INNER JOIN Garantes g ON con.IdGarante = g.IdGarante 
@@ -469,7 +477,8 @@ namespace Farias_Inmobiliaria.Models
                             IdContrato = reader.GetInt32(14),
                             FechaInicio = reader.GetDateTime(15),
                             FechaFin = reader.GetDateTime(16),
-                            MontoAlquiler = reader.GetString(17)
+                            MontoAlquiler = reader.GetString(17),
+                            EstadoCancelado = reader.GetBoolean(18)
                         };
                         res.Add(c);
                     }
@@ -478,6 +487,46 @@ namespace Farias_Inmobiliaria.Models
             }
             return res;
         }
+
+
+        // ##### Obtener el ultimo contrato de un inmueble #######
+
+
+        public IList<Contrato> ObtenerUltimosContrato()
+        {
+            IList<Contrato> res = new List<Contrato>();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string sql = @"
+                               select 
+                                    Max(IdInmueble) from contratos
+                               Group by IdInmueble";
+
+                using (SqlCommand comm = new SqlCommand(sql, conn))
+                {
+                    comm.CommandType = CommandType.Text;
+                    conn.Open();
+                    var reader = comm.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Contrato c = new()
+                        {
+                            Inmueble = new Inmueble
+                            {
+                                IdInmueble = reader.GetInt32(0),
+
+                            },
+                        };
+                        res.Add(c);
+                    }
+                    conn.Close();
+                }
+            }
+            return res;
+        }
+
+
+
 
         // ##### Obtener todos de un inmueble #####
 
@@ -505,7 +554,8 @@ namespace Farias_Inmobiliaria.Models
                                     con.IdContrato,
                                     FechaInicio, 
                                     FechaFin,
-                                    MontoAlquiler
+                                    MontoAlquiler,
+                                    EstadoCancelado
                                 FROM 
                                     Contratos con 
                                 INNER JOIN Garantes g ON con.IdGarante = g.IdGarante 
@@ -568,5 +618,59 @@ namespace Farias_Inmobiliaria.Models
             return res;
         }
 
+        // Disponible entre dos fechas?
+        //SELECT i.IdInmueble, i.Direccion 
+        //        FROM Inmuebles i
+        //            left join Contratos c on i.IdInmueble = c.idInmueble
+        //            and((c.FechaInicio between '2021/04/20' and '2021/10/20') or(c.FechaFin between '2021/04/20' and '2021/10/20')) and c.idInmueble!=0
+        //where
+        //      c.idInmueble is null 
+        //and i.Disponibilidad = 0
+
+        public IList<Contrato> ObtenerPorfechas(BuscarEntreFecha buscar)
+        {
+
+            IList<Contrato> res = new List<Contrato>();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string sql = @"
+                                SELECT i.IdInmueble, i.Direccion 
+                                FROM Inmuebles i
+                                    left join Contratos c on i.IdInmueble = c.idInmueble
+                                    and((c.FechaInicio between @desde and @hasta) or(c.FechaFin between           @desde and @hasta)) and c.idInmueble!=0
+                                WHERE
+                                    c.idInmueble = @id 
+                                OR c.idInmueble = @id  
+                                AND i.Disponibilidad = 0";
+
+
+                using (SqlCommand command = new SqlCommand(sql, conn))
+                {
+                    command.Parameters.Add("@desde", SqlDbType.Date).Value = buscar.Desde;
+                    command.Parameters.Add("@hasta", SqlDbType.Date).Value = buscar.Hasta;
+                    command.Parameters.Add("@id", SqlDbType.Int).Value = buscar.Inmueble;
+
+                    command.CommandType = CommandType.Text;
+                    conn.Open();
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+
+                    {
+                        Contrato c = new()
+                        {
+                            Inmueble = new Inmueble
+                            {
+                                IdInmueble = reader.GetInt32(0),
+                                Direccion = reader.GetString(1),
+                            },
+                        };
+                        res.Add(c);
+                    }
+                    conn.Close();
+                }
+            }
+            return res;
+        }
     }
 }

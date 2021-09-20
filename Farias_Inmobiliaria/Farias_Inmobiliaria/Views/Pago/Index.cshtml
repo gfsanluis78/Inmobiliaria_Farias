@@ -2,13 +2,27 @@
 
 @{
     ViewData["Title"] = "Listado de Pagos";
+    Contrato contrato = ViewBag.desde;
 }
 
-<h1>Listado de Pagos</h1>
+@if (contrato != null)
+{
+    <h1>Listado de Pagos del contrato @contrato.IdContrato</h1>
+    <p>
 
-<p>
-    <a class="btn btn-primary" asp-action="Create">Crear Nuevo</a>
-</p>
+        <button  type="button" id="crearModal" class="btn btn-primary" style="width:200px" data-target="#myModal">Crear nuevo</button>
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="Pago" aria-hidden="true" data-url="@Url.Action("CreateModal","Pago", new { id = contrato.IdContrato })"></div>
+    </p>
+}
+else
+{
+    <h1>Listado de Pagos</h1>
+    <p>
+        <a class="btn btn-primary" asp-action="Create">Crear Nuevo</a>
+    </p>
+}
+
+
 <table class="table">
     <thead>
         <tr>
@@ -18,9 +32,13 @@
             <th>
                 @Html.DisplayNameFor(model => model.NumeroPago)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdContrato)
-            </th>
+            @if (contrato == null)
+            {
+                <th>
+                    @Html.DisplayNameFor(model => model.IdContrato)
+                </th>
+            }
+
             <th>
                 Propiedad
             </th>
@@ -33,44 +51,67 @@
             <th>
                 @Html.DisplayNameFor(model => model.Importe)
             </th>
-            <th> 
+            <th>
                 Acciones
             </th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdPago)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumeroPago)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Contrato.IdContrato)
-            </td>
-            <td>
-                @(item.Contrato.Inmueble.Tipo + " " + item.Contrato.Inmueble.Direccion)
-            </td>
-            <td>
-                @(item.Contrato.Inquilino.Nombre +" "+ item.Contrato.Inquilino.Apellido)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Fecha)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Importe)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdPago" title="Editar"><span class="lnr lnr-pencil"></span></a>&nbsp; |
-                <a asp-action="Details" asp-route-id="@item.IdPago" title="Detalles"><span class="lnr lnr-eye"></span></a>&nbsp; |
-                <a asp-action="Delete" asp-route-id="@item.IdPago" title="Eliminar"><span class="lnr lnr-cross"></span></a>
-                
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdPago)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumeroPago)
+                </td>
+
+                @if (contrato == null)
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Contrato.IdContrato)
+                    </td>
+                }
+                <td>
+                    @(item.Contrato.Inmueble.Tipo + " " + item.Contrato.Inmueble.Direccion)
+                </td>
+                <td>
+                    @(item.Contrato.Inquilino.Nombre +" "+ item.Contrato.Inquilino.Apellido)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Fecha)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Importe)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.IdPago" title="Editar"><span class="lnr lnr-pencil"></span></a>&nbsp; |
+                    <a asp-action="Details" asp-route-id="@item.IdPago" title="Detalles"><span class="lnr lnr-eye"></span></a>&nbsp; |
+                    <a asp-action="Delete" asp-route-id="@item.IdPago" title="Eliminar"><span class="lnr lnr-cross"></span></a>
+
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 
+<script type="text/javascript">
 
+    $(document).ready(function () {
+
+        $('#crearModal').click(function () {
+
+            var url = $("#myModal").data("url");
+            $.get(url, function (data) {
+
+                $("#myModal").html(data);
+                $("#myModal").modal("show");
+
+            });
+
+        });
+
+    });
+
+</script>

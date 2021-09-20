@@ -69,6 +69,10 @@
                 <a asp-action="Edit" asp-route-id="@item.IdContrato" title="Editar"><span class="lnr lnr-pencil"></span></a>&nbsp; |
                 <a asp-action="Details" asp-route-id="@item.IdContrato" title="Detalles"><span class="lnr lnr-eye"></span></a>&nbsp; |
                 <a asp-action="Delete" asp-route-id="@item.IdContrato" title="Eliminar"><span class="lnr lnr-cross"></span></a>
+                @if (item.FechaFin > DateTime.Now)
+                {
+                    <a asp-action="Cancelar" asp-route-id="@item.IdContrato" title="Cancelacion anticipada"><span class="lnr lnr-hand"></span></a> 
+                }
             </td>
         </tr>
         }

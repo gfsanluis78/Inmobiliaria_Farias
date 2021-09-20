@@ -1,0 +1,88 @@
+﻿@model Farias_Inmobiliaria.Models.Contrato
+
+@{
+    ViewData["Title"] = "Renovar";
+    var Garantes = (IList<Garante>)ViewBag.Garantes;
+    var Inmuebles = (IList<Inmueble>)ViewBag.Inmuebles;
+    var Inquilinos = (IList<Inquilino>)ViewBag.Inquilinos;
+}
+
+<h1>Renovar</h1>
+
+<h4>Contrato @Model.IdContrato</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+
+        <h4>Inquilino: @Model.Inquilino.GetNombreCompleto()</h4>
+        <h4>Garante: @Model.Garante.GetNombreCompleto()</h4>
+        <h4>Datos del Inmueble :</h4>
+        <ul>
+            <li>
+                @Model.Inmueble.Tipo
+            </li>
+            <li>
+                @Model.Inmueble.Direccion
+            </li>
+            <li>
+                Propietario: @Model.Inmueble.Duenio.Nombre @Model.Inmueble.Duenio.Apellido
+            </li>
+            <li>
+                Ambientes: @Model.Inmueble.Ambientes
+            </li>
+        </ul>
+
+        <form asp-action="Renovar">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="IdGarante" class="control-label"></label>
+                <input asp-for="IdGarante" class="form-control" value="@Model.Garante.IdGarante" readonly />
+                <span asp-validation-for="IdGarante" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="IdInmueble" class="control-label"></label>
+                <input asp-for="IdInmueble" class="form-control" value="@Model.Inmueble.IdInmueble" readonly />
+                <span asp-validation-for="IdInmueble" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="IdInquilino" class="control-label"></label>
+                <input asp-for="IdInquilino" class="form-control" value="@Model.Inquilino.IdInquilino" readonly/>
+                <span asp-validation-for="IdInquilino" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="FechaInicio" class="control-label"></label>
+                <input asp-for="FechaInicio" class="form-control" readonly/>
+                <span asp-validation-for="FechaInicio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaFin" class="control-label"></label>
+                <input asp-for="FechaFin" class="form-control" />
+                <span asp-validation-for="FechaFin" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MontoAlquiler" class="control-label"></label>
+                <input asp-for="MontoAlquiler" class="form-control" />
+                <span asp-validation-for="MontoAlquiler" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-primary">Volver a la Lista</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

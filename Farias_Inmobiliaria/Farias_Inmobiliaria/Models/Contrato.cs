@@ -54,7 +54,7 @@ namespace Farias_Inmobiliaria.Models
         [ForeignKey(nameof(IdInquilino))]
         public Inquilino Inquilino { get; set; }
 
-
+        public bool EstadoCancelado { get; set; }
 
     }
 }

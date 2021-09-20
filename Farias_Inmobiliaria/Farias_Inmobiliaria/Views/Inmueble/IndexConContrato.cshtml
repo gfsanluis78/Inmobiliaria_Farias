@@ -34,40 +34,54 @@
             </th>
 
             <th>Acciones</th>
+            <th>
+                Contratos
+            </th>
 
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IdInmueble)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Direccion)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Tipo)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MontoAlquilerPropuesto)
-                </td>
-                <td>
-                     El inquilino
-                </td>
-                <td>
-                    @(item.Duenio.Nombre + " " + item.Duenio.Apellido)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.IdInmueble" title="Editar"><span class="lnr lnr-pencil"></span></a>&nbsp; |
-                    <a asp-action="Details" asp-route-id="@item.IdInmueble" title="Detalles"><span class="lnr lnr-eye"></span></a>&nbsp; |
-                    <a asp-action="Delete" asp-route-id="@item.IdInmueble" title="Eliminar"><span class="lnr lnr-cross"></span></a>
-                    <a asp-controller="Contrato" asp-action="IndexUnInmueble" asp-route-id="@item.IdInmueble" title="Contratos"><span class="lnr lnr-layers"></span></a>
+            @foreach (var contrato in lista)
+            {
+                if (contrato.Inmueble.IdInmueble == item.IdInmueble)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IdInmueble)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Direccion)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Tipo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MontoAlquilerPropuesto)
+                        </td>
+                        <td>
+                            El inquilino
+                        </td>
+                        <td>
+                            @(item.Duenio.Nombre + " " + item.Duenio.Apellido)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.IdInmueble" title="Editar"><span class="lnr lnr-pencil"></span></a>&nbsp; |
+                            <a asp-action="Details" asp-route-id="@item.IdInmueble" title="Detalles"><span class="lnr lnr-eye"></span></a>&nbsp; |
+                            <a asp-action="Delete" asp-route-id="@item.IdInmueble" title="Eliminar"><span class="lnr lnr-cross"></span></a>
+                            <a asp-controller="Contrato" asp-action="IndexUnInmueble" asp-route-id="@item.IdInmueble" title="Contratos"><span class="lnr lnr-layers"></span></a>
 
-                </td>
+                        </td>
+                        <td>
+                            <a class="btn btn-secondary" asp-controller="Contrato" asp-action="IndexUnInmueble" asp-route-id="@item.IdInmueble" title="Contratos">Contratos</a>
+                        </td>
 
-            </tr>
+                    </tr>
+                }
+            }
+
+
         }
     </tbody>
 </table>

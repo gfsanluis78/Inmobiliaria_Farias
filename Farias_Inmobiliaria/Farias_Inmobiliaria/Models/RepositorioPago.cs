@@ -253,6 +253,82 @@ namespace Farias_Inmobiliaria.Models
             return res;
         }
 
+        public IList<Pago> ObtenerTodosDeUnContrato(Contrato c)
+        {
+            IList<Pago> res = new List<Pago>();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string sql = @"SELECT 
+                                   
+                                    NumeroPago, 
+                                    Importe, 
+                                    Fecha,
+                                    c.IdContrato, 
+                                    c.MontoAlquiler,
+                                    i.IdInquilino,                                    
+                                    i.Nombre,
+                                    i.Apellido,
+                                    inm.IdInmueble,
+                                    inm.Tipo,
+                                    inm.Direccion,
+                                    IdPago,
+                                    p.IdContrato
+                             FROM 
+                                    Pagos p 
+                             INNER JOIN 
+                                    Contratos c ON p.IdContrato = c.IdContrato 
+                             INNER JOIN 
+                                    Inquilinos i ON c.IdInquilino = i.IdInquilino
+                             INNER JOIN 
+                                    Inmuebles inm ON c.IdInmueble = inm.IdInmueble
+                             WHERE
+                                    c.IdContrato = @id";
+
+
+                using (SqlCommand comm = new SqlCommand(sql, conn))
+                {
+                    comm.Parameters.Add("@id", SqlDbType.Int).Value = c.IdContrato;
+                    comm.CommandType = CommandType.Text;
+                    conn.Open();
+                    var reader = comm.ExecuteReader();
+                    while (reader.Read())
+
+                    {
+                        Pago p = new()
+                        {
+                            NumeroPago = reader.GetInt32(0),
+                            Importe = reader.GetString(1),
+                            Fecha = reader.GetDateTime(2),
+                            Contrato = new Contrato
+                            {
+                                IdContrato = reader.GetInt32(3),
+                                MontoAlquiler = reader.GetString(4),
+                                Inquilino = new Inquilino
+                                {
+                                    IdInquilino = reader.GetInt32(5),
+                                    Nombre = reader.GetString(6),
+                                    Apellido = reader.GetString(7)
+                                },
+                                Inmueble = new Inmueble
+                                {
+                                    IdInmueble = reader.GetInt32(8),
+                                    Tipo = reader.GetString(9),
+                                    Direccion = reader.GetString(10)
+                                }
+
+                            },
+                            IdPago = reader.GetInt32(11)
+                        };
+                        res.Add(p);
+                    }
+                    conn.Close();
+                }
+            }
+            return res;
+        }
+
+
+
         public BusquedaSiguiente NumeroPagoSiguiente(int contrato)
         {
             BusquedaSiguiente b = null;

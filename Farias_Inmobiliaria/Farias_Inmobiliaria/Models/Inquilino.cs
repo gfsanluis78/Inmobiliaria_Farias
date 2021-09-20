@@ -44,5 +44,11 @@ namespace Farias_Inmobiliaria.Models
 
         public string Email { get; set; }
 
+        public string GetNombreCompleto()
+        {
+            return this.Nombre + " " + this.Apellido;
+        }
+
+
     }
 }

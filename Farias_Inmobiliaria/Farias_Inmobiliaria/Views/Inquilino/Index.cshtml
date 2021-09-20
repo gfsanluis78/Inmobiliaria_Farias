@@ -16,10 +16,7 @@
                 @Html.DisplayNameFor(model => model.IdInquilino)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Apellido)
+               Nombre completo
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Dni)
@@ -42,10 +39,7 @@
                 @Html.DisplayFor(modelItem => item.IdInquilino)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Apellido)
+                @item.Nombre @item.Apellido
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Dni)

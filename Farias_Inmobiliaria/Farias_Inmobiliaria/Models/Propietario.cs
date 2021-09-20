@@ -54,5 +54,11 @@ namespace Farias_Inmobiliaria.Models
         {
             throw new NotImplementedException();
         }
+
+        public string GetNombreCompleto()
+        {
+            return this.Nombre + " " + this.Apellido;
+        }
+
     }
 }

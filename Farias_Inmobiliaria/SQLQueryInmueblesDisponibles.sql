@@ -1,4 +1,18 @@
 ﻿
+
+SELECT i.IdInmueble, i.Direccion 
+FROM Inmuebles i 
+	left join Contratos c on i.IdInmueble = c.idInmueble 
+	and ((c.FechaInicio between '2021/09/28' and '2022/09/28') or (c.FechaFin between '2021/09/28' and '2022/09/28')) and c.idInmueble!=0
+where 
+c.idInmueble = 1021 
+or c.idInmueble = 1021  
+and i.Disponibilidad = 0
+
+
+
+
+
 /* Libres Ahora con fecha*/
 Select i.Direccion,i.IdInmueble,i.Tipo, c.IdContrato, c.FechaInicio, c.FechaFin
 	from Inmuebles i 
@@ -37,4 +51,27 @@ and i.Disponibilidad = 1
 SELECT Count(idInmueble)
 from  Contratos c
 Where Idinmueble = 1009
+
+
+  SELECT 
+                                    IdInmueble, 
+                                    Direccion, 
+                                    Superficie, 
+                                    Latitud, 
+                                    Longitud, 
+                                    Uso, 
+                                    Ambientes, 
+                                    Tipo, 
+                                    PrecioAproximado,
+                                    MontoAlquilerPropuesto,
+                                    Disponibilidad,
+                                    i.IdPropietario, 
+                                    p.Nombre, 
+                                    p.Apellido 
+                                FROM Inmuebles i 
+                                INNER JOIN Propietarios p ON i.IdPropietario = p.IdPropietario
+
+
+select Max(IdInmueble) as IdInmueble from contratos
+group by IdInmueble
 

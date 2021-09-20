@@ -23,7 +23,7 @@ namespace Farias_Inmobiliaria.Models
 
         // Id contrato
 
-        [Required(ErrorMessage = "Este campo es requerido.")]
+        [Required(ErrorMessage = "El contrato es requerido.")]
         [Display(Name = "Contrato")]
         public int? IdContrato { get; set; }
 
@@ -31,7 +31,7 @@ namespace Farias_Inmobiliaria.Models
 
         [Display(Name = "Fecha")]
         [DataType(DataType.Date)]
-        [Required(ErrorMessage = "Este campo es requerido.")]
+        //[Required(ErrorMessage = "La Fecha es requerida.")]
         public DateTime? Fecha { get; set; }
 
         // Importe

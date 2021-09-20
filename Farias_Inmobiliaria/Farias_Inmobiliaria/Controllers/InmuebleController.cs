@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Linq;
 
 namespace Farias_Inmobiliaria.Controllers
 {
@@ -23,7 +24,10 @@ namespace Farias_Inmobiliaria.Controllers
         {
             try
             {
+
+                var listaContratos = repositorioContrato.ObtenerTodos();
                 var lista = repositorio.ObtenerTodos();
+                ViewBag.listaContratos = listaContratos;
                 if (TempData.ContainsKey("Id"))
                     ViewBag.Id = TempData["Id"];
                 if (TempData.ContainsKey("Mensaje"))
@@ -42,15 +46,18 @@ namespace Farias_Inmobiliaria.Controllers
         {
             try
             {
-                var contratos = repositorioContrato.ObtenerTodos();
-                ViewBag.inquilinos = contratos;
 
-                var lista = repositorio.ObtenerTodosConContrato();
+                var listaContratos = repositorioContrato.ObtenerUltimosContrato();
+                var lista = repositorio.ObtenerTodos();
+                Boolean soloContratos = true;
+                ViewBag.contratos = listaContratos;
+                ViewBag.soloContratos = "soloContratos";
                 if (TempData.ContainsKey("Id"))
                     ViewBag.Id = TempData["Id"];
                 if (TempData.ContainsKey("Mensaje"))
                     ViewBag.Mensaje = TempData["Mensaje"];
-                //throw new Exception(); //Prueba de cacth
+                
+                ////throw new Exception(); //Prueba de cacth
                 return View(lista);
             }
             catch (Exception ex)
@@ -62,7 +69,7 @@ namespace Farias_Inmobiliaria.Controllers
 
 
         // GET: Inmueble/BusquedaTodos/1
-        [Route("[controller]/BusquedaTodos/{propietario}", Name ="BusquedaTodos")]
+        [Route("[controller]/BusquedaTodos/{propietario}", Name = "BusquedaTodos")]
         public ActionResult BusquedaTodos(int propietario)
         {
             try
@@ -151,10 +158,13 @@ namespace Farias_Inmobiliaria.Controllers
         {
             try
             {
+                var url = Request.Headers["referer"].FirstOrDefault();
+                TempData["url"] = url;
+                ViewBag.url = url;
                 var inmueble = repositorio.ObtenerPorId(id);
 
                 ViewBag.Propietarios = repositorioPropietario.ObtenerTodos();
-                
+
                 if (TempData.ContainsKey("Mensaje"))
                     ViewBag.Mensaje = TempData["Mensaje"];
                 if (TempData.ContainsKey("Error"))
@@ -176,10 +186,23 @@ namespace Farias_Inmobiliaria.Controllers
         {
             try
             {
+                var urlAnterior = "";
+
                 i.IdInmueble = id;
                 repositorio.Modificacion(i);
                 TempData["Mensaje"] = "Datos Guardados correctamente";
-                return RedirectToAction(nameof(Index));
+
+                if (TempData.ContainsKey("url"))
+                    urlAnterior = TempData["url"].ToString();
+                ViewBag.url = urlAnterior;
+                           
+
+                if (string.IsNullOrEmpty(urlAnterior))
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return Redirect(urlAnterior);
 
             }
             catch (Exception ex)
@@ -228,10 +251,7 @@ namespace Farias_Inmobiliaria.Controllers
             }
         }
 
-
-
     }
-
 
 }
 

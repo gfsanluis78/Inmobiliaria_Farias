@@ -36,15 +36,15 @@ else
                 <th>
                     @Html.DisplayNameFor(model => model.IdContrato)
                 </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.IdGarante)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.IdInmueble)
-                </th>
+               
                 <th>
                     @Html.DisplayNameFor(model => model.IdInquilino)
                 </th>
+
+                <th>
+                    Inmueble
+                </th>
+
                 <th>
                     @Html.DisplayNameFor(model => model.FechaInicio)
                 </th>
@@ -52,10 +52,23 @@ else
                     @Html.DisplayNameFor(model => model.FechaFin)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.MontoAlquiler)
+                    Monto
+                </th>
+                <th>
+                    Estado
+
                 </th>
                 <th>
                     Acciones
+                </th>
+                <th>
+                    Renovacion
+                </th>
+                <th>
+                    Cancelacion
+                </th>
+                <th>
+                    Pagos
                 </th>
             </tr>
         </thead>
@@ -63,36 +76,68 @@ else
 
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IdContrato)
-                    </td>
-                    <td>
-                        @(item.Garante.Nombre + " " + item.Garante.Apellido)
-                    </td>
-                    <td>
-                        @(item.Inmueble.Tipo + "-" + item.Inmueble.Direccion)
-                    </td>
-                    <td>
-                        @(item.Inquilino.Nombre + " " + item.Inquilino.Apellido)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FechaInicio)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FechaFin)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.MontoAlquiler)
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.IdContrato" title="Editar"><span class="lnr lnr-pencil"></span></a>&nbsp; |
-                        <a asp-action="Details" asp-route-id="@item.IdContrato" title="Detalles"><span class="lnr lnr-eye"></span></a>&nbsp; |
-                        <a asp-action="Delete" asp-route-id="@item.IdContrato" title="Eliminar"><span class="lnr lnr-cross"></span></a>
-                        <a asp-action="Delete" asp-route-id="@item.IdContrato" title="Renovar"><span class="lnr lnr-sync"></span></a>
-                        <a asp-action="Cancelar" asp-route-id="@item.IdContrato" title="Cancelacion anticipada"><span class="lnr lnr-hand"></span></a>
-                    </td>
-                </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdContrato)
+                </td>
+
+                <td>
+                    @(item.Inquilino.Nombre + " " + item.Inquilino.Apellido)
+                </td>
+                <td>
+                    @(item.Inmueble.IdInmueble + " " + item.Inmueble.Tipo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaInicio)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaFin)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MontoAlquiler)
+                </td>
+                @if (item.FechaInicio < DateTime.Now && item.FechaFin > DateTime.Now)
+                {
+                    <td>Vigente</td>
+                }
+                else if (item.FechaInicio > DateTime.Now && item.FechaFin > DateTime.Now)
+                {
+                    <td>Pendiente</td>
+                }
+                else if (item.EstadoCancelado)
+                {
+                    <td>Cancelado</td>
+                }
+                else
+                {
+                    <td>Finalizado</td>
+                }
+
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.IdContrato" title="Editar"><span class="lnr lnr-pencil"></span></a>&nbsp; |
+                    <a asp-action="Details" asp-route-id="@item.IdContrato" title="Detalles"><span class="lnr lnr-eye"></span></a>&nbsp; |
+                    <a asp-action="Delete" asp-route-id="@item.IdContrato" title="Eliminar"><span class="lnr lnr-cross"></span></a>
+
+
+                </td>
+                <td>
+                    <a class="btn btn-secondary" asp-action="Renovar" asp-route-id="@item.IdContrato" title="Renovar">Renovar</a>
+
+                </td>
+                <td>
+                    @if (item.FechaFin > DateTime.Now)
+                    {
+                        <a class="btn btn-danger" asp-action="Cancelar" asp-route-id="@item.IdContrato" title="Cancelacion anticipada">Cancelar</a>
+                    }
+                </td>
+
+                <td>
+                    <a class="btn btn-secondary" asp-controller="Pago" asp-action="IndexDeUnContrato" asp-route-id="@item.IdContrato" title="Renovar">Pagos</a>
+
+                </td>
+
+
+            </tr>
 
             }
 

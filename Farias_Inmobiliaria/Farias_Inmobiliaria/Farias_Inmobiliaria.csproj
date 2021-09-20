@@ -22,6 +22,8 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
+    <Folder Include="Models\Herramientas\" />
+    <Folder Include="Models\NewFolder\NewFolder\" />
     <Folder Include="wwwroot\js\moment\" />
   </ItemGroup>
 

@@ -2,52 +2,65 @@
 
 @{
     ViewData["Title"] = "Crear";
+    var elPago = ViewBag.Pago;
 }
 
 <h1>Crear</h1>
+<h4>@DateTime.Today.Day / @DateTime.Today.Month / @DateTime.Today.Year</h4>
 
 <h4>Pago</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+    <div class="col-md-4" id="elAncho">
+        <form id="form" asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="NumeroPago" class="control-label"></label>
-                <input type="number" id="numPago" asp-for="NumeroPago" class="form-control" readonly onfocus="this.blur()"/>
+                <input type="number" id="numPago" asp-for="NumeroPago" class="form-control" readonly onfocus="this.blur()" />
                 <span asp-validation-for="NumeroPago" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+
+            @if (elPago != "solo")
+            {
                 <label asp-for="IdContrato" class="control-label"></label>
-
-                <select id="selectContrato" form-control" name="IdContrato">
-                    @if (ViewBag.Contratos != null)
-                    {
-                        @foreach (var item in (IList<Contrato>)ViewBag.Contratos)
-                        {
-                            <option value="@item.IdContrato">@(item.IdContrato + "- " + item.Inmueble.Tipo + " " + item.Inmueble.Direccion)</option>
-                        }
-                        <option value="" selected disabled>Seleccione un Contrato...</option>
-
-                    }
-                </select>
-
+                <input type="number" asp-for="IdContrato" class="form-control" readonly onfocus="this.blur()" />
                 <span asp-validation-for="IdContrato" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Fecha" class="control-label"></label>
-                <input asp-for="Fecha" class="form-control" />
-                <span asp-validation-for="Fecha" class="text-danger"></span>
-            </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label asp-for="IdContrato" class="control-label"></label>
+
+                    <select id="selectContrato" class="form-control" name="IdContrato">
+                        @if (ViewBag.Contratos != null)
+                        {
+                            @foreach (var item in (IList<Contrato>)ViewBag.Contratos)
+                            {
+                                <option value="@item.IdContrato">@(item.IdContrato + "- " + item.Inmueble.Tipo + " " + item.Inmueble.Direccion)</option>
+                            }
+                            <option value="" selected disabled>Seleccione un Contrato...</option>
+
+                        }
+                    </select>
+
+                    <span asp-validation-for="IdContrato" class="text-danger"></span>
+                </div>
+            }
             <div class="form-group">
                 <label id="elImporte" asp-for="Importe" class="control-label"></label>
                 <input id="importe" asp-for="Importe" class="form-control" />
                 <span asp-validation-for="Importe" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Crear" class="btn btn-primary" /> |
-                <a asp-action="Index" class="btn btn-primary">Volver a la Lista</a>
-            </div>
+
+            @if (elPago == "solo")
+            {
+                <div class="form-group">
+                    <input type="submit" value="Crear" class="btn btn-primary" /> |
+                    <a asp-action="Index" class="btn btn-primary">Volver a la Lista</a>
+                </div>
+            }
+
         </form>
     </div>
 </div>
@@ -78,7 +91,7 @@
                 elNumero.innerHTML = res.num;
                 elNumero.value = res.num + "";
 
-                
+
 
 			}).fail(res => {
 				console.log("Error: ", res.num);
@@ -92,7 +105,7 @@
 
 			}).done(res => {
                 console.log("Búsqueda MOnto: ", res.mon);
-              
+
                 if (res.mon > 0) {
                     importe.innerHTML = res.mon;
                     importe.value = res.mon;

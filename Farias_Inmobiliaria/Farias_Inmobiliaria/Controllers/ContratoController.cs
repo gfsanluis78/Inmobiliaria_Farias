@@ -1,4 +1,5 @@
 ﻿using Farias_Inmobiliaria.Models;
+//using Google.Type;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -61,7 +62,8 @@ namespace Farias_Inmobiliaria.Controllers
                 if (TempData.ContainsKey("Mensaje"))
                     ViewBag.Mensaje = TempData["Mensaje"];
                 //throw new Exception(); //Prueba de cacth
-                return View(lista);
+                //return View(lista);
+                return View("Index", lista);
             }
             catch (Exception ex)
             {
@@ -77,6 +79,8 @@ namespace Farias_Inmobiliaria.Controllers
             try
             {
                 Inmueble inmu = repositorioInmueble.ObtenerPorId(inmueble);
+
+
                 ViewBag.Garantes = repositorioGarante.ObtenerTodos();
                 ViewBag.Inmuebles = repositorioInmueble.ObtenerTodos();
                 ViewBag.Inquilinos = repositorioInquilino.ObtenerTodos();
@@ -86,6 +90,13 @@ namespace Farias_Inmobiliaria.Controllers
                     ViewBag.Id = TempData["Id"];
                 if (TempData.ContainsKey("Mensaje"))
                     ViewBag.Mensaje = TempData["Mensaje"];
+                if (lista.Count == 0)
+                {
+                    TempData["Mensaje"] = "El inmueble " + inmu.IdInmueble + " no tiene Contratos";
+                    return RedirectToAction(nameof(Index), "Inmueble");
+                }
+
+
                 //throw new Exception(); //Prueba de cacth
                 return View(lista);
             }
@@ -154,8 +165,6 @@ namespace Farias_Inmobiliaria.Controllers
                     return View(c);
 
                 }
-
-
             }
             catch (Exception ex)
             {
@@ -170,6 +179,16 @@ namespace Farias_Inmobiliaria.Controllers
             try
             {
                 var contrato = repositorio.ObtenerPorId(id);
+                if (contrato.EstadoCancelado)
+                {
+                    TempData["Mensaje"] = "No se puede editar un contrato Cancelado";
+                    return RedirectToAction(nameof(Index));
+                }
+                else if (contrato.FechaFin < DateTime.Now)
+                {
+                    TempData["Mensaje"] = "No se puede editar un contrato Finalizado";
+                    return RedirectToAction(nameof(Index));
+                }
 
                 ViewBag.Garantes = repositorioGarante.ObtenerTodos();
                 ViewBag.Inmuebles = repositorioInmueble.ObtenerTodos();
@@ -334,19 +353,142 @@ namespace Farias_Inmobiliaria.Controllers
 
 
         [Route("[controller]/tieneContrato/{idInmueble}", Name = "tieneContrato")]
-        public IActionResult tieneContrato(int idInmueble)
+        public IActionResult TieneContrato(int idInmueble)
         {
             try
             {
                 var res = repositorio.obtenerPorInmueble(idInmueble);
                 return Json(new { Datos = res });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrate = ex.StackTrace;
+                return View();
+            }
 
-                throw;
+
+        }
+
+        // Get: Contrato/Renovar/1
+        public ActionResult Renovar(int id)
+        {
+            try
+            {
+                var contrato = repositorio.ObtenerPorId(id);
+                if (contrato.EstadoCancelado)
+                {
+                    TempData["Mensaje"] = "No se puede renovar un contrato Cancelado. Realice un contrato nuevo";
+                    return RedirectToAction(nameof(Index));
+                }
+                else if (contrato.FechaFin < DateTime.Now)
+                {
+                    TempData["Mensaje"] = "No se puede renovar un contrato Finalizado. Realice un contrato nuevo";
+                    return RedirectToAction(nameof(Index));
+                }
+                else if (contrato.FechaInicio > DateTime.Now)
+                {
+                    TempData["Mensaje"] = "Ya existe una Renovacion pendiente de inicio para este contrato";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                var fechaNuevaInicio = new DateTime();
+                var fechaNuevaFin = new DateTime();
+
+                fechaNuevaInicio = (DateTime)contrato.FechaFin;
+
+                fechaNuevaInicio = fechaNuevaInicio.AddDays(1);
+                fechaNuevaFin = fechaNuevaInicio.AddDays(365);
+
+                contrato.FechaInicio = fechaNuevaInicio;
+                contrato.FechaFin = fechaNuevaFin;
+
+
+
+                ViewBag.Garantes = repositorioGarante.ObtenerTodos();
+                ViewBag.Inmuebles = repositorioInmueble.ObtenerTodos();
+                ViewBag.Inquilinos = repositorioInquilino.ObtenerTodos();
+                if (TempData.ContainsKey("Mensaje"))
+                    ViewBag.Mensaje = TempData["Mensaje"];
+                if (TempData.ContainsKey("Error"))
+                    ViewBag.Error = TempData["Error"];
+
+                return View(contrato);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return RedirectToAction(nameof(Index));
             }
         }
 
+        // Post: Contrato/Renovar/1
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Renovar(Contrato c)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+
+
+                {
+                    var i = repositorioInmueble.ObtenerPorId((int)c.IdInmueble);
+                    var estaDisponible = i.Disponibilidad;
+
+                    if (estaDisponible != true)
+                    {
+                        TempData["mensaje"] = "El inmueble no esta disponible para nuevos Contratos";
+                        ViewBag.Garantes = repositorioGarante.ObtenerTodos();
+                        ViewBag.Inmuebles = repositorioInmueble.ObtenerTodos();
+                        ViewBag.Inquilinos = repositorioInquilino.ObtenerTodos();
+                        return RedirectToAction(nameof(Index));
+                    }
+
+                    BuscarEntreFecha buscar = new()
+                    {
+                        Desde = (DateTime)c.FechaInicio,
+                        Hasta = (DateTime)c.FechaFin,
+                        Inmueble = (int)c.IdInmueble,
+                    };
+
+                    var lista = repositorio.ObtenerPorfechas(buscar);
+                    var cant = lista.Count;
+
+                    if (cant == 0)
+                    {
+                        repositorio.Alta(c);
+                        TempData["Id"] = c.IdContrato;
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        var cantString = cant == 1 ? "contrato" : "contratos";
+                        var existe_n = cant == 1 ? "Existe " : "Existen";
+                        
+
+                        TempData["mensaje"] = existe_n + cant + " " + cantString + " para este inmueble entre las fechas seleccionadas. Revise las fechas disponibles";
+                        ViewBag.Garantes = repositorioGarante.ObtenerTodos();
+                        ViewBag.Inmuebles = repositorioInmueble.ObtenerTodos();
+                        ViewBag.Inquilinos = repositorioInquilino.ObtenerTodos();
+                        return RedirectToAction(nameof(Index));
+                    }
+
+
+                }
+                else
+                {
+                    ViewBag.Garantes = repositorioGarante.ObtenerTodos();
+                    ViewBag.Inmuebles = repositorioInmueble.ObtenerTodos();
+                    ViewBag.Inquilinos = repositorioInquilino.ObtenerTodos();
+                    return View(c);
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View(c);
+            }
+        }
     }
 }
