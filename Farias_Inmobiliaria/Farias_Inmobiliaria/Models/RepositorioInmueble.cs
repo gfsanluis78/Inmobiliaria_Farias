@@ -196,6 +196,62 @@ namespace Farias_Inmobiliaria.Models
             return i;
         }
 
+        public IList<DisponiblesEntreFechas> ObtenerDisponiblesPorFecha(BuscarEntreFecha buscar)
+        {
+            IList<DisponiblesEntreFechas> lista = new List<DisponiblesEntreFechas>();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sql = @" 
+                                SELECT i.IdInmueble, i.Direccion, i.Tipo, i.Ambientes, i.MontoAlquilerPropuesto
+                                FROM Inmuebles i
+                                LEFT JOIN Contratos c on i.IdInmueble = c.IdInmueble
+                                AND((c.FechaInicio between @desde and @hasta) 
+                                OR(c.FechaFin between @desde and @hasta))   
+                                AND c.idInmueble != 0
+                                WHERE c.idInmueble is null
+                                AND i.Disponibilidad = 1";
+
+
+                               //     (SELECT * FROM 
+                               //         Inmuebles i LEFT JOIN 
+                               //             (SELECT  c.idInmueble 
+                               //                 FROM Contratos c 
+                               //                 WHERE ((c.FechaInicio between @desde  AND @hasta) 
+                               //                 OR (c.FechaFin between @desde and @hasta)) 
+                               //                 AND c.idInmueble != @id) x ON (i.IdInmueble = x.IdInmueble)
+                               //WHERE x.IdInmueble IS NULL and i.Disponibilidad = 0) i  INNER JOIN Propietarios P ON i.idPropietario = P.idPropietario;";
+
+                using (SqlCommand com = new SqlCommand(sql, connection))
+                {
+                    com.CommandType = CommandType.Text;
+                    com.Parameters.Add("@desde", SqlDbType.Date).Value = buscar.Desde;
+                    com.Parameters.Add("@hasta", SqlDbType.Date).Value = buscar.Hasta;
+                    com.Parameters.AddWithValue("@id", 0);
+                    connection.Open();
+                    var reader = com.ExecuteReader();
+                    if (reader != null)
+                    {
+                        while (reader.Read())
+                        {
+                            DisponiblesEntreFechas i = new DisponiblesEntreFechas
+                            {
+                                Id = reader.GetInt32(0),
+                                Direccion = reader.GetString(1),
+                                Tipo = reader.GetString(2),
+                                Ambientes = reader.GetInt32(3),
+                                MontoAlquilerPropuesto = reader.GetString(4),
+                                
+                            };
+
+                            lista.Add(i);
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            return lista;
+        }
+
         public IList<Inmueble> ObtenerTodos()
         {
             IList<Inmueble> res = new List<Inmueble>();

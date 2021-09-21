@@ -1,0 +1,73 @@
+﻿@model Farias_Inmobiliaria.Models.BuscarEntreFecha
+
+
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle"> Fechas </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+
+           <p id="texto">Seleccione las fechas de su interes...</p>
+
+
+                <form id="formAvatar"  asp-action="IndexDisponiblesEntreFechas">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Desde" class="control-label"></label>
+                        <input type="date" asp-for="Desde" class="form-control" />
+                        <span asp-validation-for="Desde" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Hasta" class="control-label"></label>
+                        <input type="date" asp-for="Hasta" class="form-control" />
+                        <span asp-validation-for="Hasta" class="text-danger"></span>
+                    </div>
+                    <div class="form-group" hidden>
+                        <label asp-for="Inmueble" class="control-label"></label>
+                        <input asp-for="Inmueble" class="form-control" />
+                        <span asp-validation-for="Inmueble" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Buscar" class="btn btn-primary" />
+                    </div>
+                </form>
+
+        </div>
+        <div class="modal-footer">
+
+            <button id="buttonModal" type="button" class="btn btn-primary" hidden>Estoy con suerte</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $("#iAvatar").change(function () {
+        $("#buttonModal").attr("hidden", false);
+        $("#texto").text("Presione el boton cambiar...");
+
+    });
+
+    console.log("Pasando1");
+    $("#buttonModal").click(function (event) {
+        console.log("Hola1");
+        $('#formAvatar').submit();
+        console.log("Hola2");
+
+    });
+
+
+
+    //alert("hola");
+
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

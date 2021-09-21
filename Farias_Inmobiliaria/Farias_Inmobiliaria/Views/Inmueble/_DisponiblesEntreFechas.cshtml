@@ -1,0 +1,98 @@
+﻿@model IEnumerable<Farias_Inmobiliaria.Models.DisponiblesEntreFechas>
+<!--
+
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"> Disponibles </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+-->
+
+@{
+    ViewData["Title"] = "Inmuebles";
+
+}
+
+<h1>Listado de Inmuebles </h1>
+<h3>Entre las fechas </h3>
+
+<p>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Direccion)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Tipo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Ambientes)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MontoAlquilerPropuesto)
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Direccion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Tipo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Ambientes)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MontoAlquilerPropuesto)
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+    <!--
+          </div>
+    <div class="modal-footer">
+
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+
+    </div>
+    </div>
+    </div>
+
+    <script type="text/javascript">
+
+
+
+
+            //alert("hola");
+
+    </script>
+
+        -->
+
+
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }

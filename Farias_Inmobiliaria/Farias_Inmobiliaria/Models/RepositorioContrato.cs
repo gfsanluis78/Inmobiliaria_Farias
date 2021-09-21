@@ -672,5 +672,40 @@ namespace Farias_Inmobiliaria.Models
             }
             return res;
         }
+
+        public bool ObtenerPorfechasInm(BuscarEntreFecha buscar)
+        {
+
+            bool res = true;
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string sql = @"
+                                SELECT c.* FROM Contratos c
+                                WHERE (c.FechaInicio BETWEEN @desde AND @hasta
+                                OR c.FechaFin BETWEEN @desde AND @hasta)
+                                AND c.IdInmueble = @id;";
+
+
+                using (SqlCommand command = new SqlCommand(sql, conn))
+                {
+                    command.Parameters.Add("@desde", SqlDbType.Date).Value = buscar.Desde;
+                    command.Parameters.Add("@hasta", SqlDbType.Date).Value = buscar.Hasta;
+                    command.Parameters.Add("@id", SqlDbType.Int).Value = buscar.Inmueble;
+
+                    command.CommandType = CommandType.Text;
+                    conn.Open();
+                    var reader = command.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        res = false;
+                    }
+                }
+                conn.Close();
+
+            }
+            return res;
+        }
     }
 }

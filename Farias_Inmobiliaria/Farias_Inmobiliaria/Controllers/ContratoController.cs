@@ -152,19 +152,32 @@ namespace Farias_Inmobiliaria.Controllers
         {
             try
             {
+                BuscarEntreFecha buscar = new()
+                {
+                    Desde = (DateTime)c.FechaInicio,
+                    Hasta = (DateTime)c.FechaFin
+                };
 
-                if (ModelState.IsValid)
+                var hayContratos = repositorio.ObtenerPorfechasInm(buscar);
+
+                if (!hayContratos)
                 {
-                    repositorio.Alta(c);
-                    TempData["Id"] = c.IdContrato;
-                    return RedirectToAction(nameof(Index));
-                }
-                else
-                {
+                    TempData["mensaje"] = "Existen contratos en esa fecha. Revise las disponibles";
                     ViewBag.Garantes = repositorioGarante.ObtenerTodos();
                     ViewBag.Inmuebles = repositorioInmueble.ObtenerTodos();
                     ViewBag.Inquilinos = repositorioInquilino.ObtenerTodos();
                     return View(c);
+                }
+                else
+                {
+
+                    if (true)
+                    {
+                        repositorio.Alta(c);
+                        TempData["Id"] = c.IdContrato;
+                        return RedirectToAction(nameof(Index));
+                    }
+               
 
                 }
             }

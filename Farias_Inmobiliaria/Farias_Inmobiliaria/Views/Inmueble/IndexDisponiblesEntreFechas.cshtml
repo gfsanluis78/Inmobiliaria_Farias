@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Farias_Inmobiliaria.Models.DisponiblesEntreFechas>
+
+@{
+    ViewData["Title"] = "IndexDisponiblesEntreFechas";
+    BuscarEntreFecha son = ViewBag.fechas;
+}
+
+<h1>Disponibles entre Fechas</h1>
+<h2>Desde @son.Desde.Day/@son.Desde.Month/@son.Desde.Year Hasta @son.Hasta.Day/@son.Hasta.Month/@son.Hasta.Year</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Direccion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tipo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ambientes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MontoAlquilerPropuesto)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Direccion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tipo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ambientes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MontoAlquilerPropuesto)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

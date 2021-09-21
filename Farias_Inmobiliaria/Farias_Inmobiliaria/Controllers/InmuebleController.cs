@@ -69,6 +69,50 @@ namespace Farias_Inmobiliaria.Controllers
             }
         }
 
+        // get levanta modal fechas
+        public ActionResult ModalFechas()
+        {
+            try
+            {
+                return PartialView("_ModalFechas");
+            }
+            catch (Exception ex)
+            {
+
+                ViewBag.Error = ex.Message;
+                return PartialView("_ModalFechas");
+            }
+            
+        }
+
+
+
+        // get inmubles disponible entre fechas
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult IndexDisponiblesEntreFechas(BuscarEntreFecha buscar)
+        {
+            try
+            {
+                
+                var lista = repositorio.ObtenerDisponiblesPorFecha(buscar);
+                ViewBag.fechas = buscar;
+                
+                if (TempData.ContainsKey("Id"))
+                    ViewBag.Id = TempData["Id"];
+                if (TempData.ContainsKey("Mensaje"))
+                    ViewBag.Mensaje = TempData["Mensaje"];
+
+                ////throw new Exception(); //Prueba de cacth
+                return View(lista);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return RedirectToAction("Index");
+            }
+        }
+
 
         // GET: Inmueble/BusquedaTodos/1
         [Route("[controller]/BusquedaTodos/{propietario}", Name = "BusquedaTodos")]

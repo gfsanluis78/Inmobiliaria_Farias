@@ -459,3 +459,6 @@ C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobi
 C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobiliaria\Farias_Inmobiliaria\obj\Debug\net5.0\Razor\Views\Home\Pruebas.cshtml.g.cs
 C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobiliaria\Farias_Inmobiliaria\obj\Debug\net5.0\Razor\Views\Pago\_CreateModal.cshtml.g.cs
 C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobiliaria\Farias_Inmobiliaria\obj\Debug\net5.0\Razor\Views\Usuario\_EditAvatar.cshtml.g.cs
+C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobiliaria\Farias_Inmobiliaria\obj\Debug\net5.0\Razor\Views\Inmueble\_ModalFechas.cshtml.g.cs
+C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobiliaria\Farias_Inmobiliaria\obj\Debug\net5.0\Razor\Views\Inmueble\_DisponiblesEntreFechas.cshtml.g.cs
+C:\Users\Genaro\Documents\TUDS\Archivos locales de VS\Inmobiliaria\Farias_Inmobiliaria\Farias_Inmobiliaria\obj\Debug\net5.0\Razor\Views\Inmueble\IndexDisponiblesEntreFechas.cshtml.g.cs

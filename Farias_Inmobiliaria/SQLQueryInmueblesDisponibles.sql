@@ -39,9 +39,9 @@ select GETDATE()
 
 
 /* Disponibles en determinada fecha*/
-SELECT i.IdInmueble, i.Direccion 
+SELECT i.IdInmueble, i.Direccion, i.Tipo, i.Ambientes, i.MontoAlquilerPropuesto 
 FROM Inmuebles i 
-	left join Contratos c on i.IdInmueble = c.IdInmueble 
+	left join Contratos c on i.IdInmueble = c.IdInmueble
 	and ((c.FechaInicio between '2021/04/20' and '2021/10/20') or (c.FechaFin between '2021/04/20' and '2021/10/20')) and c.idInmueble!=0
 where 
 c.idInmueble is null 
@@ -75,3 +75,52 @@ Where Idinmueble = 1009
 select Max(IdInmueble) as IdInmueble from contratos
 group by IdInmueble
 
+
+SELECT                                                                                                          i.IdInmueble,
+                                    i.Direccion,
+                                    i.Superficie,
+                                    i.Latitud,
+                                    i.Longitud,
+                                    i.Uso,
+                                    i.Tipo,
+                                    i.Ambientes,
+                                    i.PrecioAproximado,
+                                    i.MontoAlquilerPropuesto,
+                                    i.Disponibilidad,
+                                    i.IdPropietario,
+                                    P.Nombre ,  
+                                    P.Apellido
+                              FROM 
+                                    (SELECT * FROM 
+                                        Inmuebles i LEFT JOIN 
+                                            (SELECT  idInmueble 
+                                                FROM Contratos c 
+                                                WHERE ((c.fechaDesde between now  AND "21/10/2021" OR (c.fechaHasta between now and "21/10/2021")) 
+                                                AND c.idInmueble != 0) /*inmueble ON (i.IdInmueble = inmueble.IdInmueble)
+                               WHERE inmueble.IdInmueble IS NULL and i.Disponibilidad = 0) i  INNER JOIN Propietarios P ON i.idPropietario = P.idPropietario; */
+
+
+/*Tocada busca disponible entre dos fechas*/                              
+
+SELECT                                                                                                           i.IdInmueble,
+                                    i.Direccion,
+                                    i.Superficie,
+                                    i.Latitud,
+                                    i.Longitud,
+                                    i.Uso,
+                                    i.Tipo,
+                                    i.Ambientes,
+                                    i.PrecioAproximado,
+                                    i.MontoAlquilerPropuesto,
+                                    i.Disponibilidad,
+                                    i.IdPropietario,
+                                    P.Nombre ,  
+                                    P.Apellido
+                              FROM Inmuebles i 
+	                          LEFT JOIN Contratos c on i.IdInmueble = c.IdInmueble
+                              LEFT JOIN Propietarios p on i.IdInmueble = p.IdInmueble
+	                          AND ((c.FechaInicio between '2021/04/20' and '2021/10/20')
+                              OR (c.FechaFin between '2021/04/20' and '2021/10/20')) 
+                              AND c.idInmueble!=0
+                              WHERE c.idInmueble is null 
+                              AND i.Disponibilidad = 1;
