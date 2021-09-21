@@ -173,32 +173,32 @@ namespace Farias_Inmobiliaria.Controllers
                 }
                 // TODO: Add update logic here
 
-                if (u.AvatarFile != null && u.Id > 0)
-                {
-                    string wwwPath = environment.WebRootPath;   // carpeta raiz donde estan los css, js y fotos
-                    string path = Path.Combine(wwwPath, "Uploads");
-                    if (!Directory.Exists(path))
-                    {
-                        Directory.CreateDirectory(path);
-                    }
-                    //Path.GetFileName(u.AvatarFile.FileName);//este nombre se puede repetir
-                    string fileName = "avatar_" + u.Id + Path.GetExtension(u.AvatarFile.FileName);
-                    string pathCompleto = Path.Combine(path, fileName);
-                    u.Avatar = Path.Combine("/Uploads", fileName);
-                    using (FileStream stream = new FileStream(pathCompleto, FileMode.Create))
-                    {
-                        u.AvatarFile.CopyTo(stream);
-                    }
+                //if (u.AvatarFile != null && u.Id > 0)
+                //{
+                //    string wwwPath = environment.WebRootPath;   // carpeta raiz donde estan los css, js y fotos
+                //    string path = Path.Combine(wwwPath, "Uploads");
+                //    if (!Directory.Exists(path))
+                //    {
+                //        Directory.CreateDirectory(path);
+                //    }
+                //    //Path.GetFileName(u.AvatarFile.FileName);//este nombre se puede repetir
+                //    string fileName = "avatar_" + u.Id + Path.GetExtension(u.AvatarFile.FileName);
+                //    string pathCompleto = Path.Combine(path, fileName);
+                //    u.Avatar = Path.Combine("/Uploads", fileName);
+                //    using (FileStream stream = new FileStream(pathCompleto, FileMode.Create))
+                //    {
+                //        u.AvatarFile.CopyTo(stream);
+                //    }
 
-                }
+                //}
                 repositorio.Modificacion(u);
 
                 u = repositorio.ObtenerPorId(u.Id);
 
                 TempData["Mensaje"] = "Datos guardados correctamente del Usuario: " + id;
 
-                //return RedirectToAction(vista, u);
-                return RedirectToAction();
+                return RedirectToAction(vista, u);
+                //return RedirectToAction();
             }
             catch (Exception ex)
             {//colocar breakpoints en la siguiente línea por si algo falla
@@ -232,6 +232,9 @@ namespace Farias_Inmobiliaria.Controllers
         {
             try
             {
+                Usuario aModificar = repositorio.ObtenerPorId(usuario.Id);
+
+
                 if (!User.IsInRole("Administrador"))//no soy admin
                 {
                     var usuarioActual = repositorio.ObtenerPorEmail(User.Identity.Name);
@@ -240,17 +243,21 @@ namespace Farias_Inmobiliaria.Controllers
                     return RedirectToAction(nameof(Index), "Home");
 
                 }
-                
+
 
                 if (usuario.AvatarFile != null && usuario.Id > 0)
                 {
                     string wwwPath = environment.WebRootPath;   // carpeta raiz donde estan los css, js y fotos
                     string path = Path.Combine(wwwPath, "Uploads");
+
+
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);
                     }
-                    //Path.GetFileName(u.AvatarFile.FileName);//este nombre se puede repetir
+
+
+                    //Path.GetFileName(usuario.AvatarFile.FileName);//este nombre se puede repetir
                     string fileName = "avatar_" + usuario.Id + Path.GetExtension(usuario.AvatarFile.FileName);
                     string pathCompleto = Path.Combine(path, fileName);
                     usuario.Avatar = Path.Combine("/Uploads", fileName);
@@ -259,20 +266,32 @@ namespace Farias_Inmobiliaria.Controllers
                         usuario.AvatarFile.CopyTo(stream);
                     }
 
-                }
+                    int res = repositorio.ModificacionAvatar(usuario);
+                    usuario = repositorio.ObtenerPorId(usuario.Id);
+                    if (res != -1)
+                    {
+                        TempData["Mensaje"] = "Datos guardados correctamente del Usuario: " + usuario.Id;
 
-                int res = repositorio.ModificacionAvatar(usuario);
+                        return RedirectToAction("Edit", usuario);
+                    }
+                    else
+                    {
+                        TempData["error"] = "Ocurrrio un error al guardar";
+                        return RedirectToAction("Edit", usuario);
+                    }
 
-                if (res != -1)
-                {
-                    TempData["Mensaje"] = "Datos guardados correctamente del Usuario: " + usuario.Id;
-                    return RedirectToAction("Edit");
+
                 }
                 else
                 {
-                    TempData["error"] = "Ocurrrio un error al guardar";
-                    return RedirectToAction("Edit");
+                    TempData["Mensaje"] = "No se elegio un nuevo archivo para el avatar del usuario: " + usuario.Id;
+
+                    return RedirectToAction("Edit", usuario);
                 }
+
+
+
+
             }
 
             catch (Exception ex)

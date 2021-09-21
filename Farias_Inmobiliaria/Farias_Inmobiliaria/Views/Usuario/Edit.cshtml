@@ -52,13 +52,13 @@
             <div class="form-group">
 
                 <button type="button" id="crearModal" class="btn btn-primary" style="width:200px" data-target="#myModal">Cambiar Avatar</button>
-                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="Avatar" aria-hidden="true" data-url="@Url.Action("EditAvatar","Usuario", new { id = Model.Id })"></div>
+
                 <!--
-                                exampleModalLong
-                                myModal
-                              <input type="file" asp-for="AvatarFile" class="from-control" />
-                              <span asp-validation-for="AvatarFile" class="text-danger"></span>
-                -->
+                            exampleModalLong
+                            myModal
+                          <input type="file" asp-for="AvatarFile" class="from-control" />
+                          <span asp-validation-for="AvatarFile" class="text-danger"></span>
+            -->
             </div>
 
             @if (User.IsInRole("Administrador") || User.IsInRole("SuperAdministrador"))
@@ -91,6 +91,8 @@
 
             </div>
         </form>
+
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="Avatar" aria-hidden="true" data-url="@Url.Action("EditAvatar","Usuario", new { id = Model.Id })"></div>
     </div>
 </div>
 

@@ -12,8 +12,13 @@
 
             <form id="formAvatar" asp-action="EditAvatarPost" enctype="multipart/form-data">
 
+                <p>Seleccione su nuevo avatar...</p>
+
+                <input asp-for="Id" class="form-control" readonly hidden />
+                <span asp-validation-for="Id" class="text-danger"></span>
+
                 <label asp-for="AvatarFile" class="control-label"></label>
-                <input type="file" name="AvatarFile" class="form-control-file" />
+                <input type="file" name="AvatarFile" class="form-control-file" required />
                 <span asp-validation-for="AvatarFile" class="text-danger"></span>
 
             </form>
