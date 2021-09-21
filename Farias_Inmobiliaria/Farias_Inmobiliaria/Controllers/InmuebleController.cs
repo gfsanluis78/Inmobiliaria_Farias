@@ -1,4 +1,5 @@
 ﻿using Farias_Inmobiliaria.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -6,6 +7,7 @@ using System.Linq;
 
 namespace Farias_Inmobiliaria.Controllers
 {
+    [Authorize]
     public class InmuebleController : Controller
     {
         private readonly RepositorioInmueble repositorio;
@@ -214,6 +216,7 @@ namespace Farias_Inmobiliaria.Controllers
 
 
         // GET: InmuebleController/Delete/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
 
         {
@@ -235,6 +238,7 @@ namespace Farias_Inmobiliaria.Controllers
         // POST: Inmueble/Eliminar/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Inmueble i)
         {
             try

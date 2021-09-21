@@ -1,4 +1,5 @@
 ﻿using Farias_Inmobiliaria.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Farias_Inmobiliaria.Controllers
 {
+    [Authorize]
     public class InquilinoController : Controller
     {
         // inicio la variable el repositorio
@@ -147,6 +149,7 @@ namespace Farias_Inmobiliaria.Controllers
         }
 
         // GET: InquilinoController/Delete/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
             try
@@ -169,6 +172,7 @@ namespace Farias_Inmobiliaria.Controllers
         // POST: InquilinoController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try

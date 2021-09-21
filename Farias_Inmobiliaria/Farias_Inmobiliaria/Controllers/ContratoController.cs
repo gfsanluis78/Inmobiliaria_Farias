@@ -1,4 +1,5 @@
 ﻿using Farias_Inmobiliaria.Models;
+using Microsoft.AspNetCore.Authorization;
 //using Google.Type;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -7,6 +8,7 @@ using System;
 
 namespace Farias_Inmobiliaria.Controllers
 {
+    [Authorize]
     public class ContratoController : Controller
     {
         private readonly RepositorioContrato repositorio;
@@ -311,6 +313,7 @@ namespace Farias_Inmobiliaria.Controllers
             }
         }
 
+        [Authorize(Policy = "Administrador")]
         // GET: ContratoController/Delete/5
         public ActionResult Delete(int id)
         {
@@ -335,6 +338,7 @@ namespace Farias_Inmobiliaria.Controllers
         // POST: ContratoController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Contrato contrato)
         {
             try
@@ -465,7 +469,7 @@ namespace Farias_Inmobiliaria.Controllers
                     {
                         var cantString = cant == 1 ? "contrato" : "contratos";
                         var existe_n = cant == 1 ? "Existe " : "Existen";
-                        
+
 
                         TempData["mensaje"] = existe_n + cant + " " + cantString + " para este inmueble entre las fechas seleccionadas. Revise las fechas disponibles";
                         ViewBag.Garantes = repositorioGarante.ObtenerTodos();

@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 
 namespace Farias_Inmobiliaria.Controllers
 {
+
     public class UsuarioController : Controller
     {
         private readonly IConfiguration configuration;
