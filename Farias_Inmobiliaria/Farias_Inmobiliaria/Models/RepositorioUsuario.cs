@@ -68,7 +68,7 @@ namespace Farias_Inmobiliaria.Models
             int res = -1;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"UPDATE Usuarios SET Nombre=@nombre, Apellido=@apellido, Dni=@dni, Avatar=@avatar, Email=@email, Clave=@clave, Rol=@rol " +
+                string sql = $"UPDATE Usuarios SET Nombre=@nombre, Apellido=@apellido, Dni=@dni, Email=@email, Rol=@rol " +
                     $"WHERE Id = @id";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
@@ -76,9 +76,8 @@ namespace Farias_Inmobiliaria.Models
                     command.Parameters.AddWithValue("@nombre", e.Nombre);
                     command.Parameters.AddWithValue("@apellido", e.Apellido);
                     command.Parameters.AddWithValue("@dni", e.DNI);
-                    command.Parameters.AddWithValue("@avatar", e.Avatar);
                     command.Parameters.AddWithValue("@email", e.Email);
-                    command.Parameters.AddWithValue("@clave", e.Clave);
+                    //command.Parameters.AddWithValue("@clave", e.Clave);
                     command.Parameters.AddWithValue("@rol", e.Rol);
                     command.Parameters.AddWithValue("@id", e.Id);
                     connection.Open();
@@ -88,6 +87,32 @@ namespace Farias_Inmobiliaria.Models
             }
             return res;
         }
+
+        public int ModificacionAvatar(Usuario e)
+        {
+            int res = -1;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sql = @"UPDATE Usuarios SET Avatar=@avatar
+                               WHERE Id = @id";
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.CommandType = CommandType.Text;
+                    if (String.IsNullOrEmpty(e.Avatar))
+                        command.Parameters.AddWithValue("@avatar", DBNull.Value);
+                    else
+                        command.Parameters.AddWithValue("@avatar", e.Avatar);
+                    command.Parameters.AddWithValue("@id", e.Id);
+                    connection.Open();
+                    res = command.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            return res;
+        }
+
+
+
 
         public IList<Usuario> ObtenerTodos()
         {

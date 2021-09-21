@@ -8,5 +8,7 @@ namespace Farias_Inmobiliaria.Models.Interfaces.Interfaces_especiales
     public interface IRepositorioUsuario : IRepositorio<Usuario>
     {
         Usuario ObtenerPorEmail(string email);
+
+        int ModificacionAvatar(Usuario usuario);
     }
 }

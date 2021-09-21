@@ -123,6 +123,12 @@ namespace Farias_Inmobiliaria.Controllers
         [Authorize]
         public ActionResult Perfil()
         {
+            var url = Request.Headers["referer"].FirstOrDefault();
+            TempData["url"] = url;
+            ViewBag.url = url;
+
+
+
             ViewData["Title"] = "Mi perfil";
             var u = repositorio.ObtenerPorEmail(User.Identity.Name);
             ViewBag.Roles = Usuario.ObtenerRoles();
@@ -130,12 +136,20 @@ namespace Farias_Inmobiliaria.Controllers
         }
 
         // GET: Usuarios/Edit/5
-        //[Authorize(Policy = "Administrador")]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Edit(int id)
         {
+            if (TempData.ContainsKey("Id"))
+                ViewBag.Id = TempData["Id"];
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
+
+
             ViewData["Title"] = "Editar usuario";
             var u = repositorio.ObtenerPorId(id);
             ViewBag.Roles = Usuario.ObtenerRoles();
+
+
             return View(u);
         }
 
@@ -153,17 +167,123 @@ namespace Farias_Inmobiliaria.Controllers
                     vista = nameof(Perfil);//solo puedo ver mi perfil
                     var usuarioActual = repositorio.ObtenerPorEmail(User.Identity.Name);
                     if (usuarioActual.Id != id)//si no es admin, solo puede modificarse él mismo
-                        return RedirectToAction(nameof(Index), "Home");
+                        TempData["mensaje"] = "Solo puede ver su perfil. No tiene privilegios para realizar modificaciones. Consulte con el administrador";
+                    return RedirectToAction(nameof(Index), "Home");
+
                 }
                 // TODO: Add update logic here
 
-                return RedirectToAction(vista);
+                if (u.AvatarFile != null && u.Id > 0)
+                {
+                    string wwwPath = environment.WebRootPath;   // carpeta raiz donde estan los css, js y fotos
+                    string path = Path.Combine(wwwPath, "Uploads");
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+                    //Path.GetFileName(u.AvatarFile.FileName);//este nombre se puede repetir
+                    string fileName = "avatar_" + u.Id + Path.GetExtension(u.AvatarFile.FileName);
+                    string pathCompleto = Path.Combine(path, fileName);
+                    u.Avatar = Path.Combine("/Uploads", fileName);
+                    using (FileStream stream = new FileStream(pathCompleto, FileMode.Create))
+                    {
+                        u.AvatarFile.CopyTo(stream);
+                    }
+
+                }
+                repositorio.Modificacion(u);
+
+                u = repositorio.ObtenerPorId(u.Id);
+
+                TempData["Mensaje"] = "Datos guardados correctamente del Usuario: " + id;
+
+                //return RedirectToAction(vista, u);
+                return RedirectToAction();
             }
             catch (Exception ex)
             {//colocar breakpoints en la siguiente línea por si algo falla
                 throw;
             }
         }
+
+
+        public ActionResult EditAvatar(int id)
+        {
+            try
+            {
+                Usuario usuario = repositorio.ObtenerPorId(id);
+
+                return PartialView("_EditAvatar", usuario);
+            }
+            catch (Exception ex)
+            {
+
+
+                ViewBag.Error = ex.Message;
+                return View();
+            }
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public ActionResult EditAvatarPost(Usuario usuario)
+        {
+            try
+            {
+                if (!User.IsInRole("Administrador"))//no soy admin
+                {
+                    var usuarioActual = repositorio.ObtenerPorEmail(User.Identity.Name);
+                    if (usuarioActual.Id != usuario.Id)//si no es admin, solo puede modificarse él mismo
+                        TempData["mensaje"] = "Solo puede ver su perfil. No tiene privilegios para realizar modificaciones. Consulte con el administrador";
+                    return RedirectToAction(nameof(Index), "Home");
+
+                }
+                
+
+                if (usuario.AvatarFile != null && usuario.Id > 0)
+                {
+                    string wwwPath = environment.WebRootPath;   // carpeta raiz donde estan los css, js y fotos
+                    string path = Path.Combine(wwwPath, "Uploads");
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+                    //Path.GetFileName(u.AvatarFile.FileName);//este nombre se puede repetir
+                    string fileName = "avatar_" + usuario.Id + Path.GetExtension(usuario.AvatarFile.FileName);
+                    string pathCompleto = Path.Combine(path, fileName);
+                    usuario.Avatar = Path.Combine("/Uploads", fileName);
+                    using (FileStream stream = new FileStream(pathCompleto, FileMode.Create))
+                    {
+                        usuario.AvatarFile.CopyTo(stream);
+                    }
+
+                }
+
+                int res = repositorio.ModificacionAvatar(usuario);
+
+                if (res != -1)
+                {
+                    TempData["Mensaje"] = "Datos guardados correctamente del Usuario: " + usuario.Id;
+                    return RedirectToAction("Edit");
+                }
+                else
+                {
+                    TempData["error"] = "Ocurrrio un error al guardar";
+                    return RedirectToAction("Edit");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View();
+            }
+
+        }
+
+
 
         // GET: Usuarios/Delete/5
         [Authorize(Policy = "Administrador")]

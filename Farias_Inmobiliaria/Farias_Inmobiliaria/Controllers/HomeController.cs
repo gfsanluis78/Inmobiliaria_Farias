@@ -27,6 +27,11 @@ namespace Farias_Inmobiliaria.Controllers
 
         public IActionResult Index()
         {
+            if (TempData.ContainsKey("Id"))
+                ViewBag.Id = TempData["Id"];
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
+
             List<string> clientes = propietarios.ObtenerTodos().Select(x => x.Nombre + " " + x.Apellido).ToList();
             return View(clientes);
         }

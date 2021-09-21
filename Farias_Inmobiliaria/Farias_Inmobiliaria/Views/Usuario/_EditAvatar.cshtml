@@ -1,0 +1,46 @@
+﻿@model Farias_Inmobiliaria.Models.Usuario
+
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle"> Avatar </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+
+            <form id="formAvatar" asp-action="EditAvatarPost" enctype="multipart/form-data">
+
+                <label asp-for="AvatarFile" class="control-label"></label>
+                <input type="file" name="AvatarFile" class="form-control-file" />
+                <span asp-validation-for="AvatarFile" class="text-danger"></span>
+
+            </form>
+
+        </div>
+        <div class="modal-footer">
+
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <button id="buttonModal" type="button" class="btn btn-primary">Cambiar</button>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    console.log("Pasando1");
+    $("#buttonModal").click(function (event) {
+        console.log("Hola1");
+        $('#formAvatar').submit();
+        console.log("Hola2");
+
+    });
+
+    //alert("hola");
+
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
