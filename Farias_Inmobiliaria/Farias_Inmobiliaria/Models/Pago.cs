@@ -11,7 +11,7 @@ namespace Farias_Inmobiliaria.Models
     public class Pago
     {
         // Id del pago
-
+        [Key]
         [Display(Name = "Código")]
         public int IdPago { get; set; }
 

@@ -56,6 +56,15 @@ Tips:
 	
 
 		
+###################
+Parte 2
+Desarrollo de la APi
+
+	1. Se agregan los paquetes nuggets
+	2. Se agrega la carpeta para las clases controller
+	3. Se agregan las clases que heredan de la clase controlerbase
+
+
 
 	
 

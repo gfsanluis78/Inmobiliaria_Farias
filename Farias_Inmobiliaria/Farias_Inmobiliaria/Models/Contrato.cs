@@ -9,7 +9,7 @@ namespace Farias_Inmobiliaria.Models
 {
     public class Contrato
     {
-
+        [Key]
         [Display(Name = "Código")]
         public int IdContrato { get; set; }
 

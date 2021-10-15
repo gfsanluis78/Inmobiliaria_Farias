@@ -9,6 +9,7 @@ namespace Farias_Inmobiliaria.Models
 {
     public class Inmueble
     {
+        [Key]
         [Display(Name = "Código")]
         public int IdInmueble { get; set; }
         

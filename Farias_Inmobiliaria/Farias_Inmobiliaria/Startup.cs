@@ -1,15 +1,19 @@
-using Farias_Inmobiliaria.Models;
+ï»¿using Farias_Inmobiliaria.Models;
 using Farias_Inmobiliaria.Models.Interfaces;
 using Farias_Inmobiliaria.Models.Interfaces.Interfaces_especiales;
+using Inmobiliaria_.Net_Core.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +41,37 @@ namespace Farias_Inmobiliaria
                     options.LoginPath = "/Usuario/Login";
                     options.LogoutPath = "/Usuario/Logout";
                     options.AccessDeniedPath = "/Home/Restringido";
+                })
+                .AddJwtBearer(options =>//la api web valida con token
+                {
+                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = configuration["TokenAuthentication:Issuer"],
+                        ValidAudience = configuration["TokenAuthentication:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(
+                            configuration["TokenAuthentication:SecretKey"])),
+                    };
+                    // opciÃ³n extra para usar el token el hub
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            // Read the token out of the query string
+                            var accessToken = context.Request.Query["access_token"];
+                            // If the request is for our hub...
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) &&
+                                path.StartsWithSegments("/chatsegurohub"))
+                            {//reemplazar la url por la usada en la ruta â¬†
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
 
             services.AddAuthorization(options =>
@@ -45,18 +80,26 @@ namespace Farias_Inmobiliaria
                 options.AddPolicy("Administrador", policy => policy.RequireRole("Administrador", "SuperAdministrador"));
             });
             services.AddMvc();
-            services.AddSignalR();//añade signalR
+            services.AddSignalR();//aÃ±ade signalR
             //IUserIdProvider permite cambiar el ClaimType usado para obtener el UserIdentifier en Hub
             //services.AddSingleton<IUserIdProvider, UserIdProvider>();
 
             services.AddControllersWithViews();
-            // SOLO PARA INYECCIÓN DE DEPENDECIAS:
+            // SOLO PARA INYECCIÃ“N DE DEPENDECIAS:
             /*
             Transient objects are always different; a new instance is provided to every controller and every service.
             Scoped objects are the same within a request, but different across different requests.
             Singleton objects are the same for every object and every request.
             */
             services.AddTransient<IRepositorioUsuario, RepositorioUsuario>();
+
+            // SOLO SI USA ENTITY FRAMEWORK:
+            services.AddDbContext<DataContext>(
+                options => options.UseSqlServer(
+                    configuration["ConnectionStrings:DefaultConnection"]
+                )
+            );
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -89,7 +132,7 @@ namespace Farias_Inmobiliaria
                 MinimumSameSitePolicy = SameSiteMode.None,
             });
 
-            // Habilitar autenticación
+            // Habilitar autenticaciÃ³n
             app.UseAuthentication();
 
             app.UseAuthorization();
@@ -97,7 +140,7 @@ namespace Farias_Inmobiliaria
             // App en ambiente de desarrollo?
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();//página amarilla de errores
+                app.UseDeveloperExceptionPage();//pÃ¡gina amarilla de errores
             }
 
             app.UseEndpoints(endpoints =>
