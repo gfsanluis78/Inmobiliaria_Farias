@@ -48,11 +48,11 @@ namespace Farias_Inmobiliaria.Models
         public Garante  Garante { get; set; }
 
 
-        [ForeignKey(nameof(IdInmueble))]
-        public Inmueble Inmueble { get; set; }
-
         [ForeignKey(nameof(IdInquilino))]
         public Inquilino Inquilino { get; set; }
+
+        [ForeignKey(nameof(IdInmueble))]
+        public Inmueble Inmueble { get; set; }
 
         public bool EstadoCancelado { get; set; }
 

@@ -342,7 +342,8 @@ namespace Farias_Inmobiliaria.Models
                                 INNER JOIN Garantes g ON con.IdGarante = g.IdGarante 
                                 INNER JOIN Inmuebles i ON con.IdInmueble = i.IdInmueble
                                 INNER JOIN Propietarios p ON i.IdPropietario = p.IdPropietario
-                                INNER JOIN Inquilinos inq ON con.IdInquilino = inq.IdInquilino";
+                                INNER JOIN Inquilinos inq ON con.IdInquilino = inq.IdInquilino
+                                Order By con.IdInmueble DESC;";
 
                 using (SqlCommand comm = new SqlCommand(sql, conn))
                 {

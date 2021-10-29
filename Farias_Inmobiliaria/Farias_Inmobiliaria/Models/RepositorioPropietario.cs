@@ -117,6 +117,35 @@ namespace Farias_Inmobiliaria.Models
             return res;
         }
 
+        public int ModificacionPassword(Propietario p)
+        {
+            int res = -1;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sql = @"
+                                UPDATE Propietarios 
+                                SET 
+                                    Password=@password
+                                WHERE IdPropietario = @id";
+
+                using (SqlCommand comm = new SqlCommand(sql, connection))
+                {
+                    comm.CommandType = CommandType.Text;
+
+                    comm.Parameters.AddWithValue("@id", p.IdPropietario);
+                    comm.Parameters.AddWithValue("@password", p.Password);
+
+                    connection.Open();
+
+                    res = comm.ExecuteNonQuery();
+
+                    connection.Close();
+                }
+            }
+            return res;
+        }
+
+
         virtual public Propietario ObtenerPorId(int id)
         {
             Propietario p = null;
@@ -138,6 +167,47 @@ namespace Farias_Inmobiliaria.Models
                 {
                     command.Parameters.Add("@id", SqlDbType.Int).Value = id;
                     command.CommandType = CommandType.Text;
+                    connection.Open();
+                    var reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        p = new Propietario
+                        {
+                            IdPropietario = reader.GetInt32(0),
+                            Nombre = reader.GetString(1),
+                            Apellido = reader.GetString(2),
+                            Dni = reader.GetString(3),
+                            Telefono = reader.GetString(4),
+                            Email = reader.GetString(5),
+                            Password = reader.GetString(6),
+                        };
+                    }
+                    connection.Close();
+                }
+            }
+            return p;
+        }
+
+        public Propietario ObtenerPorEmail(string email)
+        {
+            Propietario p = null;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sql = @"
+                                SELECT 
+                                    IdPropietario, 
+                                    Nombre, 
+                                    Apellido, 
+                                    Dni, 
+                                    Telefono, 
+                                    Email, 
+                                    Password 
+                                FROM Propietarios
+                                WHERE IdPropietario=@id";
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.CommandType = CommandType.Text;
+                    command.Parameters.Add("@email", SqlDbType.VarChar).Value = email;
                     connection.Open();
                     var reader = command.ExecuteReader();
                     if (reader.Read())

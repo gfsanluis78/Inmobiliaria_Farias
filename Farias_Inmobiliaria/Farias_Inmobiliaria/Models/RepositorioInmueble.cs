@@ -157,7 +157,8 @@ namespace Farias_Inmobiliaria.Models
                                     Disponibilidad,
                                     p.IdPropietario,
                                     p.Nombre,
-                                    p.Apellido
+                                    p.Apellido,
+                                    Imagen
                                FROM Inmuebles i INNER JOIN Propietarios p ON p.IdPropietario = i.IdPropietario
                                WHERE i.IdInmueble=@id";
                 using (SqlCommand command = new SqlCommand(sql, connection))
@@ -188,6 +189,7 @@ namespace Farias_Inmobiliaria.Models
                                 Apellido = reader.GetString(13)
 
                             },
+                            Imagen = reader.GetString(14)
                         };
                     }
                     connection.Close();
@@ -274,7 +276,8 @@ namespace Farias_Inmobiliaria.Models
                                     p.Nombre, 
                                     p.Apellido 
                                 FROM Inmuebles i 
-                                INNER JOIN Propietarios p ON i.IdPropietario = p.IdPropietario";
+                                INNER JOIN Propietarios p ON i.IdPropietario = p.IdPropietario
+                                Order By IdInmueble DESC;";
                 
                 using (SqlCommand comm = new SqlCommand(sql, conn))
                 {

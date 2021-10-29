@@ -42,18 +42,49 @@
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+
+                <button type="button" id="crearModal" class="btn btn-primary" style="width:200px" data-target="#mymodal">Cambiar Contraseña</button>
+
+            </div>
+
+
             <div class="form-group">
                 <input type="submit" value="Guardar" class="btn btn-primary" /> |
                 <a asp-action="Index" class="btn btn-primary">Volver a la Lista</a>
-
             </div>
         </form>
+
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="Cambiar contraseña" aria-hidden="true" data-url="@Url.Action("EditPassword","Propietario", new { id = Model.IdPropietario })"></div>
+
     </div>
 </div>
 
 <div>
     
 </div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#crearModal').click(function () {
+
+            var url = $("#myModal").data("url");
+            $.get(url, function (data) {
+
+                console.log("Click en button cambiar contraseña");
+                $("#myModal").html(data);
+                $("#myModal").modal("show");
+
+            });
+
+        });
+
+    });
+
+</script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

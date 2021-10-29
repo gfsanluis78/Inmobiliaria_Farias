@@ -20,7 +20,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace Inmobiliaria_.Net_Core.Api
 {
 	[Route("api/[controller]")]
-	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]     // Aca aclaro que para autorizar revise lo tokens
 	[ApiController]
 	public class PropietariosController : ControllerBase//
 	{
@@ -32,9 +32,9 @@ namespace Inmobiliaria_.Net_Core.Api
 			this.contexto = contexto;
 			this.config = config;
 		}
-		// GET: api/<controller>
+		// GET: api/<controller>						// Ok
 		[HttpGet]
-		public async Task<ActionResult<Propietario>> Get()
+		public async Task<ActionResult<Propietario>> Get()	
 		{
 			try
 			{
@@ -48,7 +48,8 @@ namespace Inmobiliaria_.Net_Core.Api
                     .Where(c => c.Inmueble.Duenio.Email....);*/
 				/*var res = contexto.Propietarios.Select(x => new { x.Nombre, x.Apellido, x.Email })
                     .SingleOrDefault(x => x.Email == usuario);*/
-				return await contexto.Propietarios.SingleOrDefaultAsync(x => x.Email == usuario);
+				Propietario prop = await contexto.Propietarios.SingleOrDefaultAsync(x => x.Email == usuario);
+				return Ok(prop);
 			}
 			catch (Exception ex)
 			{
@@ -56,7 +57,7 @@ namespace Inmobiliaria_.Net_Core.Api
 			}
 		}
 
-		// GET api/<controller>/5
+		// GET api/Propietarios/2						// Ok
 		[HttpGet("{id}")]
 		public async Task<IActionResult> Get(int id)
 		{
@@ -71,7 +72,7 @@ namespace Inmobiliaria_.Net_Core.Api
 			}
 		}
 
-		// GET api/<controller>/GetAll
+		// GET api/<controller>/GetAll					// Ok
 		[HttpGet("GetAll")]
 		public async Task<IActionResult> GetAll()
 		{
@@ -85,26 +86,28 @@ namespace Inmobiliaria_.Net_Core.Api
 			}
 		}
 
-		// POST api/<controller>/login
-		[HttpPost("login")]
+		// POST api/<controller>/login					// Ok
+		[HttpPost("login")]							
 		[AllowAnonymous]
-		public async Task<IActionResult> Login([FromForm] LoginView loginView)
+		public async Task<IActionResult> Login([FromForm] String usuario, [FromForm] String clave)
 		{
 			try
 			{
 				string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-					password: loginView.Clave,
+					password: clave,
 					salt: System.Text.Encoding.ASCII.GetBytes(config["Salt"]),
 					prf: KeyDerivationPrf.HMACSHA1,
 					iterationCount: 1000,
 					numBytesRequested: 256 / 8));
-				var p = await contexto.Propietarios.FirstOrDefaultAsync(x => x.Email == loginView.Usuario);
+				var p = await contexto.Propietarios.FirstOrDefaultAsync(x => x.Email == usuario);
 				if (p == null || p.Password != hashed)
 				{
 					return BadRequest("Nombre de usuario o clave incorrecta");
 				}
 				else
 				{
+					// Para el json w token
+
 					var key = new SymmetricSecurityKey(
 						System.Text.Encoding.ASCII.GetBytes(config["TokenAuthentication:SecretKey"]));
 					var credenciales = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -119,10 +122,15 @@ namespace Inmobiliaria_.Net_Core.Api
 						issuer: config["TokenAuthentication:Issuer"],
 						audience: config["TokenAuthentication:Audience"],
 						claims: claims,
-						expires: DateTime.Now.AddMinutes(60),
+						expires: DateTime.Now.AddYears(1),
 						signingCredentials: credenciales
 					);
-					return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+
+					var rta = new LoginRetrofit(
+						Token: new JwtSecurityTokenHandler().WriteToken(token)
+						);
+					
+					return Ok(rta);
 				}
 			}
 			catch (Exception ex)
@@ -131,9 +139,9 @@ namespace Inmobiliaria_.Net_Core.Api
 			}
 		}
 
-		// POST api/<controller>
-		[HttpPost]
-		public async Task<IActionResult> Post([FromForm] Propietario entidad)
+		// POST api/Propietarios/Crear					// Ok faltaria mejorar el mensaje de fallo insertar datos
+		[HttpPost("Crear")]
+		public async Task<IActionResult> Crear([FromForm] Propietario entidad)
 		{
 			try
 			{
@@ -147,47 +155,54 @@ namespace Inmobiliaria_.Net_Core.Api
 			}
 			catch (Exception ex)
 			{
-				return BadRequest(ex);
+				return BadRequest(ex.Message);
 			}
 		}
 
-		// PUT api/<controller>/5
-		[HttpPut("{id}")]
-		public async Task<IActionResult> Put(int id, [FromForm] Propietario entidad)
+		// PUT api/Propietarios/Editar				// Ok
+		[HttpPatch("Editar")]
+		public async Task<IActionResult> Editar([FromBody] Propietario propietario)
 		{
 			try
 			{
 				if (ModelState.IsValid)
 				{
-					entidad.IdPropietario = id;
-					Propietario original = await contexto.Propietarios.FindAsync(id);
-					if (String.IsNullOrEmpty(entidad.Password))
-					{
-						entidad.Password = original.Password;
-					}
-					else
-					{
-						entidad.Password = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-							password: entidad.Password,
-							salt: System.Text.Encoding.ASCII.GetBytes(config["Salt"]),
-							prf: KeyDerivationPrf.HMACSHA1,
-							iterationCount: 1000,
-							numBytesRequested: 256 / 8));
-					}
-					contexto.Propietarios.Update(entidad);
+					var usuario = User.Identity.Name;
+
+					if(usuario != propietario.Email)
+                    {
+						return BadRequest(new { Error = "No es el mismo usuario" }); 
+                    }
+					
+					Propietario original = await contexto.Propietarios.AsNoTracking().SingleOrDefaultAsync(p => p.IdPropietario == propietario.IdPropietario);
+                    
+					if (String.IsNullOrEmpty(propietario.Password))
+                    {
+                        propietario.Password = original.Password;
+                    }
+                    else
+                    {
+                        propietario.Password = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                            password: propietario.Password,
+                            salt: System.Text.Encoding.ASCII.GetBytes(config["Salt"]),
+                            prf: KeyDerivationPrf.HMACSHA1,
+                            iterationCount: 1000,
+                            numBytesRequested: 256 / 8));
+                    }
+                    contexto.Propietarios.Update(propietario);
 					await contexto.SaveChangesAsync();
-					return Ok(entidad);
+					return Ok(propietario);
 				}
-				return BadRequest();
+				return BadRequest(new { Error = "Modelo invalido" });
 			}
 			catch (Exception ex)
 			{
-				return BadRequest(ex);
+				return BadRequest(ex.Message);
 			}
 		}
 
-		// DELETE api/<controller>/5
-		[HttpDelete("{id}")]
+		// DELETE api/Propietarios/Delete/5				// Ok
+		[HttpDelete("Delete/{id}")]
 		public async Task<IActionResult> Delete(int id)
 		{
 			try
@@ -209,7 +224,7 @@ namespace Inmobiliaria_.Net_Core.Api
 			}
 		}
 
-		// GET: api/Propietarios/test
+		// GET: api/Propietarios/test					// Ok
 		[HttpGet("test")]
 		[AllowAnonymous]
 		public IActionResult Test()
@@ -224,7 +239,7 @@ namespace Inmobiliaria_.Net_Core.Api
 			}
 		}
 
-		// GET: api/Propietarios/test/5
+		// GET: api/Propietarios/test/5					// Ok
 		[HttpGet("test/{codigo}")]
 		[AllowAnonymous]
 		public IActionResult Code(int codigo)

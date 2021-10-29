@@ -1,5 +1,7 @@
 ﻿using Farias_Inmobiliaria.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -10,10 +12,12 @@ namespace Farias_Inmobiliaria.Controllers
     [Authorize]
     public class PropietarioController : Controller
     {
+        private readonly IConfiguration configuration;
         RepositorioPropietario repositorio;
 
         public PropietarioController(IConfiguration configuration)
         {
+            this.configuration = configuration;
             repositorio = new RepositorioPropietario(configuration);
         }
 
@@ -67,6 +71,19 @@ namespace Farias_Inmobiliaria.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    var salt = System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]); /// Busca la sal en configuration
+
+                    // Hasheo el pass
+                    string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                        password: p.Password,
+                        salt: salt,
+                        prf: KeyDerivationPrf.HMACSHA1,
+                        iterationCount: 1000,
+                        numBytesRequested: 256 / 8));
+
+                    p.Password = hashed;
+                    
+                    //
                     repositorio.Alta(p);
                     TempData["Id"] = p.IdPropietario;
                     return RedirectToAction(nameof(Index));
@@ -90,6 +107,8 @@ namespace Farias_Inmobiliaria.Controllers
             try
             {
                 var p = repositorio.ObtenerPorId(id);
+
+
 
                 if (TempData.ContainsKey("Mensaje"))
                     ViewBag.Mensaje = TempData["Mensaje"];
@@ -133,6 +152,106 @@ namespace Farias_Inmobiliaria.Controllers
                 return View(p);
             }
         }
+
+        public ActionResult EditPassword(int id)
+        {
+            try
+            {
+                Propietario propietario = repositorio.ObtenerPorId(id);
+
+                return PartialView("_EditPassword",propietario);
+            }
+            catch (Exception ex)
+            {
+
+
+                ViewBag.Error = ex.Message;
+                return View();
+            }
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public ActionResult EditPasswordPost(Propietario propietario)
+        {
+            if (true)   //ModelState.isvalid
+            {
+                try
+                {
+                    var nuevaClave = propietario.Password;
+
+                    Propietario aModificar = repositorio.ObtenerPorId(propietario.IdPropietario);
+
+                    if (!User.IsInRole("Administrador"))//no soy admin
+                    {
+                        TempData["mensaje"] = "Solo puede ver su perfil. No tiene privilegios para realizar modificaciones. Consulte con el administrador";
+                        return RedirectToAction("Index");
+
+                    }
+
+
+                    if (nuevaClave != null && propietario.IdPropietario > 0)
+                    {
+
+                        var salt = System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]); /// Busca la sal en configuration
+
+                        // Hasheo el pass
+                        string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                            password: nuevaClave,
+                            salt: salt,
+                            prf: KeyDerivationPrf.HMACSHA1,
+                            iterationCount: 1000,
+                            numBytesRequested: 256 / 8));
+
+                        propietario.Password = hashed;
+
+                        int res = repositorio.ModificacionPassword(propietario);
+                        propietario = repositorio.ObtenerPorId(propietario.IdPropietario);
+
+                        if (res != -1)
+                        {
+                            TempData["Mensaje"] = "Datos de la nueva contraseña guardados correctamente del Usuario: " + propietario.IdPropietario;
+
+                            return RedirectToAction("Index");
+                        }
+                        else
+                        {
+                            TempData["error"] = "Ocurrrio un error al guardar";
+                            return RedirectToAction("Index");
+                        }
+
+
+                    }
+                    else
+                    {
+                        TempData["Mensaje"] = "No se elegio una nueva contraseña para: " + propietario.IdPropietario;
+
+                        return RedirectToAction("Index");
+                    }
+
+
+
+
+                }
+
+                catch (Exception ex)
+                {
+                    ViewBag.Error = ex.Message;
+                    return RedirectToAction("Index");
+                }
+            }
+            else
+            {
+                TempData["Mensaje"] = "La contraseña ingresada no cumple con los requisitos minimos: " + propietario.IdPropietario;
+
+                return RedirectToAction("Index");
+            }
+
+
+        }
+
 
 
         // GET: PropietarioController/Delete/5

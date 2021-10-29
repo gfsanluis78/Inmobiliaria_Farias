@@ -73,7 +73,7 @@ namespace Farias_Inmobiliaria
                         }
                     };
                 });
-
+            
             services.AddAuthorization(options =>
             {
                 //options.AddPolicy("Empleado", policy => policy.RequireClaim(ClaimTypes.Role, "Administrador", "Empleado"));
